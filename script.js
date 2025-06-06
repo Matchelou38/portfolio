@@ -13,7 +13,7 @@ const projectData = [
         </ul>
         <p>Le but de ce projet a été la recherche d’informations et la création d’un site internet pour des élèves de troisième
           recherchant un stage de découverte dans une grande ESN (Entreprise de Services Numériques). 
-          Ce projet à donc été découpé en 3 grande parties.
+          Ce projet à donc été découpé en 3 grandes parties.
        </p>
        <p>La première partie consistait à faire des recherches sur l’entreprise que nous avions choisit de présenter aux 
          élèves de troisième, en utilisant le site officiel de cette dernière. Lors de nos recherches nous nous sommes 
