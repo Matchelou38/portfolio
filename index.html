@@ -18,6 +18,11 @@
       <a href="#projects">Projets</a>
       <a href="#contact">Contact</a>
     </nav>
+
+    <button id="theme-toggle" aria-label="Changer le thème">
+      <span class="icon-sun"></span>
+      <span class="icon-moon"></span>
+    </button>
   </header>
 
   <section class="hero">
@@ -96,28 +101,11 @@
     <div class="project">
       <h4>Création d'un site web institutionnel d'une entreprise</h4>
       <div class="content">
-        <p><strong> Outils utilisés :</strong></p>
-        <ul>
-          <li>Word et internet</li>
-          <li>Whimsical</li>
-          <li>Visual Studio Code</li>
-          <li>HTML, CSS et JavaScript</li>
-        </ul>
-        <p>Le but de ce projet a été la recherche d’informations et la création d’un site internet pour des élèves de troisième
-          recherchant un stage de découverte dans une grande ESN (Entreprise de Services Numériques). 
-          Ce projet à donc été découpé en 3 grande parties.
-       </p>
-       <p>La première partie consistait à faire des recherches sur l’entreprise que nous avions choisit de présenter aux 
-         élèves de troisième, en utilisant le site officiel de cette dernière. Lors de nos recherches nous nous sommes 
-         concentrés sur les informations qui nous paraissaient les plus pertinentes pour des jeunes et les avons séparés 
-         en plusieurs catégories (Brève présentation de l’entreprise, des clients, des produits, des métiers etc.).
-       </p>
-       <p>La deuxième partie consistait à la conception du site. Dans cette partie nous avons donc confectionné une maquette 
-         du rendu de notre site pour avoir une idée du rendu final.</p>
+        
       </div>
     </div>
 
-    <div class="project">
+    <div class="project" data-project="titanic">
       <h4>Naufrage du Titanic</h4>
       <div class="content">
         <p><strong> Outils utilisés :</strong></p>
@@ -147,18 +135,6 @@
     <div class="project">
       <h4>Installation de services réseaux</h4>
       <div class="content">
-        <p><strong> Outils utilisés :</strong></p>
-        <ul>
-          <li>Word, internet et machine virtuelle</li>
-          <li>SQL et commandes shell</li>
-        </ul>
-        <p>Le but de ce projet a été l’installation d’un serveur Debian sur une machine virtuelle. 
-          Ce projet a été découpé en 2 grandes étapes.</p>
-        <p>La première a été l’installation du serveur sur une machine virtuelle, incluant aussi l’installation d’Apache, 
-          de PostgreSQL et de PHP.</p>
-        <p>La deuxième partie consistait à rédiger un guide d’installation en Anglais décrivant précisément toutes les étapes 
-          nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données 
-          sur ce serveur.</p>
       </div>
     </div>
   </div>
@@ -219,5 +195,22 @@
   };
 </script>
 <script src="script.js"></script>
+<a href="#" class="back-to-top" aria-label="Remonter en haut">
+  <svg width="32" height="32" viewBox="0 0 32 32">
+    <polyline points="8,20 16,12 24,20" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+
+<div id="project-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div class="modal-carousel">
+      <!-- Les images du carrousel seront injectées ici -->
+    </div>
+    <div class="modal-details">
+      <!-- Les détails du projet seront injectés ici -->
+    </div>
+  </div>
+</div>
 </body>
 </html>
