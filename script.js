@@ -41,6 +41,24 @@ const projectData = [
           nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données 
           sur ce serveur.</p>
     `
+  },
+   {
+    title: "Installation de services réseaux",
+    images: ["img/titanic1.avif", "img/titanic2.png"],
+    details: `
+      <p><strong> Outils utilisés :</strong></p>
+        <ul>
+          <li>Word, internet et machine virtuelle</li>
+          <li>SQL et commandes shell</li>
+        </ul>
+        <p>Le but de ce projet a été l’installation d’un serveur Debian sur une machine virtuelle. 
+          Ce projet a été découpé en 2 grandes étapes.</p>
+        <p>La première a été l’installation du serveur sur une machine virtuelle, incluant aussi l’installation d’Apache, 
+          de PostgreSQL et de PHP.</p>
+        <p>La deuxième partie consistait à rédiger un guide d’installation en Anglais décrivant précisément toutes les étapes 
+          nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données 
+          sur ce serveur.</p>
+    `
   }
   // Ajoute d'autres projets ici
 ];
