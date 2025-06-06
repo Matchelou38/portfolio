@@ -74,13 +74,21 @@ document.querySelectorAll('.project').forEach((project, index) => {
 
     const carouselHTML = `
       <div class="carousel">
-        <button class="carousel-prev">←</button>
+        <button class="carousel-prev" aria-label="Image précédente">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polyline points="13 5 8 10 13 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
         <div class="carousel-images">
           ${projectInfo.images.map((src, i) => `
             <img src="${src}" class="carousel-image ${i === 0 ? 'active' : ''}" />
           `).join('')}
         </div>
-        <button class="carousel-next">→</button>
+        <button class="carousel-next" aria-label="Image suivante">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <polyline points="7 5 12 10 7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
       <div class="project-details">${projectInfo.details}</div>
     `;
@@ -95,44 +103,46 @@ document.querySelectorAll('.project').forEach((project, index) => {
 });
 
 function initCarousel() {
-  let currentIndex = 0;
   const images = document.querySelectorAll('.carousel-image');
-  const total = images.length;
+  const prev = document.querySelector('.carousel-prev');
+  const next = document.querySelector('.carousel-next');
+  if (!images.length || !prev || !next) return;
+  let current = 0;
 
-  const updateImages = () => {
-    images.forEach((img, i) => {
-      img.classList.toggle('active', i === currentIndex);
-    });
+  function show(idx) {
+    images.forEach((img, i) => img.classList.toggle('active', i === idx));
+  }
+  prev.onclick = () => {
+    current = (current - 1 + images.length) % images.length;
+    show(current);
+    prev.classList.add('clicked');
+    setTimeout(() => prev.classList.remove('clicked'), 200);
   };
-
-  document.querySelector('.carousel-prev').addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + total) % total;
-    updateImages();
-  });
-
-  document.querySelector('.carousel-next').addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % total;
-    updateImages();
-  });
+  next.onclick = () => {
+    current = (current + 1) % images.length;
+    show(current);
+    next.classList.add('clicked');
+    setTimeout(() => next.classList.remove('clicked'), 200);
+  };
+  show(current);
 }
 
 
 
   // Fermeture de la modale
-  const closeModal = document.querySelector('.close-modal');
-  if (closeModal) {
-    closeModal.addEventListener('click', function () {
-      document.getElementById('project-modal').style.display = 'none';
+  function closeModal() {
+    const modal = document.getElementById('project-modal');
+    modal.classList.add('closing');
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modal.classList.remove('closing');
       document.body.style.overflow = '';
-    });
+    }, 350);
   }
-
+  document.querySelector('.close-modal').onclick = closeModal;
   window.addEventListener('click', function (e) {
     const modal = document.getElementById('project-modal');
-    if (e.target === modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
+    if (e.target === modal) closeModal();
   });
 
   // Mode sombre

@@ -382,7 +382,7 @@ body {
 }
 
 .scroll-down:hover {
-  color: #ff6f61;
+  color: #007bff;
 }
 
 .scroll-down .arrow {
@@ -493,7 +493,8 @@ html {
 
 .close-modal {
   position: absolute;
-  top: 18px; right: 24px;
+  top: 8px; /* <-- plus haut */
+  right: 24px;
   font-size: 2.1rem;
   color: #007bff;
   background: none;
@@ -585,26 +586,73 @@ html {
 }
 .carousel-image {
   display: none;
-  max-height: 300px;
+  max-height: 320px;
   max-width: 100%;
   margin: 0 auto;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  object-fit: cover;
+  transition: box-shadow 0.3s, transform 0.3s;
+  background: #232a36;
 }
 .carousel-image.active {
   display: block;
+  animation: fadeInImg 0.5s;
+}
+@keyframes fadeInImg {
+  from { opacity: 0; transform: scale(0.97);}
+  to   { opacity: 1; transform: scale(1);}
 }
 .carousel-prev, .carousel-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
+  background: rgba(255,255,255,0.85);
+  color: #222;
   border: none;
-  font-size: 24px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+  opacity: 0.92;
+  outline: none;
+  z-index: 2;
 }
-.carousel-prev { left: 10px; }
-.carousel-next { right: 10px; }
+.carousel-prev:hover, .carousel-next:hover {
+  background: #e3e6eb;
+  color: #007bff;
+  transform: translateY(-50%) scale(1.12);
+  opacity: 1;
+}
+.carousel-prev.clicked, .carousel-next.clicked {
+  animation: arrowClick 0.15s;
+}
+@keyframes arrowClick {
+  0% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(-50%) scale(0.88); }
+  100% { transform: translateY(-50%) scale(1.12);}
+}
+.carousel-prev { left: 8px; }
+.carousel-next { right: 8px; }
+
+/* Mode sombre : flèches foncées sur fond clair */
+body.dark .carousel-prev,
+body.dark .carousel-next {
+  background: rgba(36,44,56,0.95);
+  color: #e3e6eb;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+body.dark .carousel-prev:hover,
+body.dark .carousel-next:hover {
+  background: #232a36;
+  color: #7ca7e6;
+}
 
 /* Bouton mode sombre */
 #theme-toggle {
@@ -831,5 +879,13 @@ body.dark iframe {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+}
+
+#project-modal.closing .modal-content {
+  animation: modalClose 0.35s cubic-bezier(.5,1.7,.6,1) forwards;
+}
+@keyframes modalClose {
+  0% { transform: scale(1) translateY(0); opacity: 1; }
+  100% { transform: scale(0.85) translateY(60px); opacity: 0; }
 }
 
