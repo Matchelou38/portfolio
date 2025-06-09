@@ -36,6 +36,104 @@ nav a {
   font-weight: bold;
 }
 
+/* Hamburger button styles */
+#hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 12000;
+  margin-left: 1rem;
+  position: relative;
+}
+#hamburger span {
+  display: block;
+  width: 28px;
+  height: 3.5px;
+  margin: 4px 0;
+  background: #222;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+body.dark #hamburger span { background: #e0e0e0; }
+#hamburger.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+#hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+#hamburger.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Responsive nav */
+@media (max-width: 768px) {
+  nav#main-nav {
+    position: fixed;
+    top: 0;
+    right: -100vw;
+    width: 70vw;
+    max-width: 320px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -2px 0 16px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5rem 2rem 2rem 2rem;
+    gap: 2rem;
+    transition: right 0.3s cubic-bezier(.4,2,.6,1);
+    z-index: 11001;
+  }
+  body.dark nav#main-nav {
+    background: #232324;
+  }
+  nav#main-nav.open {
+    right: 0;
+  }
+  nav#main-nav a {
+    font-size: 1.2rem;
+    color: #111;
+    margin: 0 0 1.5rem 0;
+    font-weight: bold;
+  }
+  body.dark nav#main-nav a { color: #e0e0e0; }
+  #hamburger {
+    display: flex;
+  }
+  header {
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 11000;
+  }
+  #theme-toggle {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 12001;
+  }
+  .back-to-top {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 12001;
+    width: 44px;
+    height: 44px;
+  }
+  #hamburger {
+    z-index: 12002;
+  }
+  nav#main-nav {
+    z-index: 11001;
+  }
+}
+
 /* ===========================
    HERO
 =========================== */
@@ -769,6 +867,18 @@ body {
   .project-card {
     width: 100%;
   }
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  section {
+    box-sizing: border-box;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
 }
 
 /* Smartphones (480px et moins) */
@@ -802,6 +912,38 @@ body {
   #contact button {
     font-size: 0.9rem;
     padding: 0.7rem 1.2rem;
+  }
+}
+
+/* ===========================
+   MEDIA QUERY AJOUTÉE
+=========================== */
+@media (max-width: 400px) {
+  #theme-toggle {
+    top: 8px;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+  }
+  .back-to-top {
+    bottom: 8px;
+    right: 8px;
+    width: 38px;
+    height: 38px;
+  }
+}
+@media (max-width: 500px) {
+  #theme-toggle {
+    top: 25px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+  }
+  .back-to-top {
+    bottom: 20px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
   }
 }
 

@@ -13,12 +13,16 @@
 
   <header>
     <div class="logo">Mathis</div>
-    <nav>
+    <nav id="main-nav">
       <a href="#about">À propos</a>
       <a href="#projects">Projets</a>
       <a href="#contact">Contact</a>
     </nav>
-
+    <button id="hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <button id="theme-toggle" aria-label="Changer le thème">
       <span class="icon-sun"></span>
       <span class="icon-moon"></span>
@@ -27,7 +31,7 @@
 
   <section class="hero">
     <h1>Je suis Mathis Marsande</h1>
-    <p>Développeur d'applications en devenir</p>
+    <p>Développeur d'applications</p>
     <a href="#about" class="scroll-down" aria-label="Scrollez vers la suite">
       <span>Scroller pour voir la suite</span>
       <span class="arrow">
@@ -66,9 +70,9 @@
     <i data-lucide="code"></i> Compétences
   </h3>
   <ul data-aos="fade-left" data-aos-delay="800">
-    <li><strong>Développement web :</strong> HTML, CSS</li>
-    <li><strong>Développement d'applications :</strong> Java, JavaFX, C++</li>
-    <li><strong>Outils :</strong> Figma, Visual Studio Code, IntelliJ</li>
+    <li><strong>Développement web :</strong> HTML, CSS, JavaScript, PHP</li>
+    <li><strong>Développement d'applications :</strong> Java, JavaFX, C, C++, Symfony, SQL</li>
+    <li><strong>Outils :</strong> Figma, Visual Studio Code, IntelliJ, PHPStorm</li>
   </ul>
 
   <h3 data-aos="fade-right" data-aos-delay="900">
@@ -116,6 +120,18 @@
 
     <div class="project">
       <h4>Installation de services réseaux</h4>
+      <div class="content">
+      </div>
+    </div>
+
+    <div class="project">
+      <h4>Application web de valorisation du patrimoine culturel</h4>
+      <div class="content">
+      </div>
+    </div>
+
+    <div class="project">
+      <h4>Mon carnet de suivi de recherche de stage</h4>
       <div class="content">
       </div>
     </div>
