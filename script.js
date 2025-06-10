@@ -13,14 +13,14 @@ const projectData = [
         </ul>
         <p>Le but de ce projet a été la recherche d’informations et la création d’un site internet pour des élèves de troisième
           recherchant un stage de découverte dans une grande ESN (Entreprise de Services Numériques). 
-          Ce projet à donc été découpé en 3 grandes parties.
+          Ce projet a donc été découpé en 3 grandes parties.
        </p>
-       <p>La première partie consistait à faire des recherches sur l’entreprise que nous avions choisit de présenter aux 
-         élèves de troisième, en utilisant le site officiel de cette dernière. Lors de nos recherches nous nous sommes 
-         concentrés sur les informations qui nous paraissaient les plus pertinentes pour des jeunes et les avons séparés 
+       <p>La première partie consistait à faire des recherches sur l’entreprise que nous avions choisi de présenter aux 
+         élèves de troisième, en utilisant le site officiel de cette dernière. Lors de nos recherches, nous nous sommes 
+         concentrés sur les informations qui nous paraissaient les plus pertinentes pour des jeunes et les avons séparées 
          en plusieurs catégories (Brève présentation de l’entreprise, des clients, des produits, des métiers etc.).
        </p>
-       <p>La deuxième partie consistait à la conception du site. Dans cette partie nous avons donc confectionné une maquette 
+       <p>La deuxième partie consistait à la conception du site. Dans cette partie,   nous avons donc confectionné une maquette 
          du rendu de notre site pour avoir une idée du rendu final.</p>
     `
   },
@@ -37,7 +37,7 @@ const projectData = [
           Ce projet a été découpé en 2 grandes étapes.</p>
         <p>La première a été l’installation du serveur sur une machine virtuelle, incluant aussi l’installation d’Apache, 
           de PostgreSQL et de PHP.</p>
-        <p>La deuxième partie consistait à rédiger un guide d’installation en Anglais décrivant précisément toutes les étapes 
+        <p>La deuxième partie consistait à rédiger un guide d’installation en anglais décrivant précisément toutes les étapes 
           nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données 
           sur ce serveur.</p>
     `
@@ -47,20 +47,19 @@ const projectData = [
     images: ["img/Debian.png", "img/LogoPostgreSql.png","img/Apache.png", "img/PHP-logo.png"],
     details: `
       <p><strong> Outils utilisés :</strong></p>
-        <ul>
-          <li>Word, internet et machine virtuelle</li>
-          <li>SQL et commandes shell</li>
-        </ul>
-        <p>Le but de ce projet a été l’installation d’un serveur Debian sur une machine virtuelle. 
-          Ce projet a été découpé en 2 grandes étapes.</p>
-        <p>La première a été l’installation du serveur sur une machine virtuelle, incluant aussi l’installation d’Apache, 
-          de PostgreSQL et de PHP.</p>
-        <p>La deuxième partie consistait à rédiger un guide d’installation en Anglais décrivant précisément toutes les étapes 
-          nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données 
-          sur ce serveur.</p>
+        <ul> 
+                        <p>Outils utilisés : </p>
+                        <li>Word, internet et machine virtuelle</li>
+                        <li>SQL et commandes shell</li>
+                    </ul>
+                    <p>Le but de ce projet a été l’installation d’un serveur Debian sur une machine virtuelle. Ce projet a été découpé en 2 grandes étapes.</p>
+
+                    <p>La première a été l’installation du serveur sur une machine virtuelle, incluant aussi l’installation d’Apache, de PostgreSQL et de PHP. </p>
+
+                    <p>La deuxième partie consistait à rédiger un guide d’installation en Anglais décrivant précisément toutes les étapes nécessaires pour l’installation du serveur, d’Apache, de PostgreSQL ainsi que PHP et la création d’une petite base de données sur ce serveur.</p>
     `
   },
-  {
+  {  
   title: "Application web de valorisation du patrimoine culturel",
   images: ["img/Archeopass.png", "img/Archeo_carte.png", "img/archeo_actu.png", "img/archeo_panier.png"],
   details: `
@@ -75,7 +74,7 @@ const projectData = [
         <li><strong>Pack Visite</strong> : permet de réserver plusieurs visites à tarif réduit</li>
         <li><strong>Pack Rencontre</strong> : permet de rejoindre un groupe d'utilisateurs pour une visite partagée, afin de favoriser les échanges et réduire les coûts</li>
       </ul>
-      <p>Ce projet a mobilisé des compétences en développement web, base de données, modélisation UML, gestion de projet, qualité logicielle, et communication professionnelle.</p>
+      <p>Ce projet a mobilisé des compétences en développement web, base de données, modélisation UML, gestion de projet, qualité logicielle et communication professionnelle.</p>
       <p>Nous avons suivi une démarche complète allant du recueil du besoin jusqu'à la livraison, en passant par l'analyse, la modélisation, le codage, les tests et la documentation.</p>
   `
 },
@@ -97,7 +96,7 @@ const projectData = [
 
     <p>Sur le plan technique, nous avons restructuré le code du back-end Symfony en séparant mieux les responsabilités et en mettant en place des services. L’interface web côté responsable a aussi été ajustée pour une meilleure lisibilité et une navigation plus fluide.</p>
 
-    <p>En parallèle, l'application mobile Android destinée aux étudiants a été corrigée sur plusieurs aspects ergonomiques et techniques. Nous avons optimisé la navigation, corrigé des bugs, et amélioré la gestion du cycle de vie.</p>
+    <p>En parallèle, l'application mobile Android destinée aux étudiants a été corrigée sur plusieurs aspects ergonomiques et techniques. Nous avons optimisé la navigation, corrigé des bugs et amélioré la gestion du cycle de vie.</p>
 
     <p>Nous avons également conteneurisé l’ensemble du projet avec Docker pour garantir un environnement de développement stable et un déploiement simplifié. Enfin, des tests fonctionnels ont été réalisés et des critères qualité issus de la norme ISO 25000 (SQuaRE) ont été appliqués pour assurer la fiabilité et la maintenabilité de l'application.</p>
 
