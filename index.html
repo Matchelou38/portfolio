@@ -1,223 +1,233 @@
 <!DOCTYPE html>
 <html lang="fr">
-<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio - Marsande Mathis</title>
+  <title>Mathis Marsande — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
 </head>
 <body>
 
-  <header>
-    <div class="logo">Mathis</div>
-    <nav id="main-nav">
-      <a href="#about">À propos</a>
-      <a href="#projects">Projets</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <button id="hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <button id="theme-toggle" aria-label="Changer le thème">
-      <span class="icon-sun"></span>
-      <span class="icon-moon"></span>
-    </button>
+  <!-- CURSOR -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- SIDE NAV DOTS -->
+  <nav id="side-nav" aria-label="Navigation">
+    <button class="side-dot active" data-goto="0" aria-label="Accueil"></button>
+    <button class="side-dot" data-goto="1" aria-label="À propos"></button>
+    <button class="side-dot" data-goto="2" aria-label="Projets"></button>
+    <button class="side-dot" data-goto="3" aria-label="Contact"></button>
+  </nav>
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="tb-logo">MM</div>
+    <div class="tb-right">
+      <span id="section-label-top">Accueil</span>
+      <button id="theme-toggle" aria-label="Basculer le thème">
+        <i class="fas fa-circle-half-stroke"></i>
+      </button>
+    </div>
   </header>
 
-  <section class="hero">
-    <h1>Je suis Mathis Marsande</h1>
-    <p>Développeur d'applications et de Jeux-vidéo</p>
-    <a href="#about" class="scroll-down" aria-label="Scrollez vers la suite">
-      <span>Scroller pour voir la suite</span>
-      <span class="arrow">
-        <svg viewBox="0 0 32 32">
-          <polyline points="8,12 16,20 24,12" />
-        </svg>
-      </span>
-    </a>
-  </section>
+  <!-- =========================================
+       PANELS CONTAINER
+  ========================================= -->
+  <main id="panels-wrap">
 
-<section id="about" data-aos="fade-up">
-  <h2 data-aos="fade-up" data-aos-delay="100">À propos de moi</h2>
-
-  <p data-aos="fade-up" data-aos-delay="200">Je m'appelle <strong>Mathis</strong>, 
-    étudiant en 3ème année de BUT Informatique à l'IUT 2 de Grenoble. Actuellement, je suis en échange universitaire au Canada pour me spécialiser dans le développement de jeux vidéo. Depuis toujours, je suis passionné par l'informatique et le design. 
-    Cette passion m'a conduit à étudier ces domaines pour en faire mon métier. Mon objectif est d'acquérir de nouvelles compétences et de contribuer à des projets innovants.</p>
-
-  <h3 data-aos="fade-right" data-aos-delay="300">
-    <i data-lucide="graduation-cap"></i> Parcours académique
-  </h3>
-  <ul data-aos="fade-left" data-aos-delay="400">
-    <li>
-        <strong>Actuellement :</strong> Université du Québec à Chicoutimi (Québec, Canada) 🇨🇦<br>
-        <em>Spécialisation Développement de Jeux Vidéo</em>
-    </li>
-    <li>
-        <strong>Diplôme préparé :</strong> BUT Informatique - IUT 2 de Grenoble<br>
-        <em>3ème année (Mobilité internationale)</em>
-    </li>
-  </ul>
-
-  <h3 data-aos="fade-right" data-aos-delay="500">
-    <i data-lucide="briefcase"></i> Expériences professionnelles
-  </h3>
-  <ul data-aos="fade-left" data-aos-delay="600">
-        <li><strong>Job d'été – Charvet (Été 2023) :</strong> Travail manuel, utilisation d'outils de découpage, de pliage, montage d'éléments de cuisine. Aide à la gestion du parc informatique (réhabilitation de postes).</li>
-        <li><strong>Stagiaire en informatique – Mesulog : </strong>  Rédaction de documentation technique, élaboration d’un poste de travail isolé, initiation à l’environnement LabView</li>
-      </ul>
-
-  <h3 data-aos="fade-right" data-aos-delay="700">
-    <i data-lucide="code"></i> Compétences
-  </h3>
-  <ul data-aos="fade-left" data-aos-delay="800">
-    <li><strong>Moteurs & Game Dev :</strong> Unreal Engine 5, Blueprint, C++, C</li>
-    <li><strong>Développement web & App :</strong> Java, JavaFX, Javascript, Symfony, PHP, HTML/CSS/JS, SQL</li>
-    <li><strong>Outils :</strong> Figma, Visual Studio, IntelliJ, PHPStorm, Git, Perforce</li>
-  </ul>
-
-  <h3 data-aos="fade-right" data-aos-delay="900">
-    <i data-lucide="music-2"></i> Activités et centres d’intérêts
-  </h3>
-  <ul data-aos="fade-left" data-aos-delay="1000">
-        <li><strong>Loisirs :</strong> Jeux-vidéo, musique, automobile</li>
-
-  </ul>
-
-  <h3 data-aos="fade-right" data-aos-delay="1100">
-    <i data-lucide="target"></i> Objectifs personnels
-  </h3>
-  <p data-aos="fade-up" data-aos-delay="1200">
-      Je souhaite obtenir mon diplôme de BUT Informatique avec succès et continuer ma formation dans le domaine du développement de jeux vidéo, notamment au Canada.
-
-  </p>
-  <a href="CV Marsande Mathis.pdf" download class="btn-cv" target="_blank" rel="noopener">
-      Télécharger mon CV (PDF)
-    </a>
-</section>
-
-
-
-<section id="projects" data-aos="fade-up">
-  <h2>Mes projets</h2>
-
-  <!-- Projets académiques -->
-  <div class="project-category" data-aos="fade-up" data-aos-delay="100">
-    <h3>Projets académiques</h3>
-  </br>
-
-    <div class="project">
-      <h4>Création d'un site web institutionnel d'une entreprise</h4>
-      <div class="content">
-        
+    <!-- PANEL 0 — HERO -->
+    <section class="panel" id="p0" data-label="Accueil">
+      <div class="bg-digit" aria-hidden="true">01</div>
+      <div class="panel-content hero-content">
+        <p class="eyebrow">
+          <span class="eyebrow-bar"></span>
+          Game Dev · BUT Informatique · Grenoble → Québec
+        </p>
+        <h1 class="hero-name">
+          <span class="hn-line" id="hn1">Mathis</span>
+          <span class="hn-line accent" id="hn2">Marsande</span>
+        </h1>
+        <p class="hero-sub">Développeur d'applications &amp; de jeux vidéo</p>
+        <div class="hero-actions">
+          <button class="btn-cine" data-goto="2">Voir les projets</button>
+          <button class="btn-cine ghost" data-goto="1">À propos</button>
+        </div>
       </div>
-    </div>
-
-    <div class="project" data-project="titanic">
-      <h4>Naufrage du Titanic</h4>
-      <div class="content">
+      <div class="panel-foot">
+        <span class="location-tag">🇨🇦 UQAC — Chicoutimi, Canada</span>
+        <div class="scroll-hint-wrap">
+          <div class="scroll-hint-bar"><div class="scroll-hint-fill"></div></div>
+          <span>Scroll</span>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="project">
-      <h4>Installation de services réseaux</h4>
-      <div class="content">
-      </div>
-    </div>
+    <!-- PANEL 1 — ABOUT -->
+    <section class="panel" id="p1" data-label="À propos">
+      <div class="bg-digit" aria-hidden="true">02</div>
+      <div class="panel-content about-grid">
 
-    <div class="project">
-      <h4>Application web de valorisation du patrimoine culturel</h4>
-      <div class="content">
-      </div>
-    </div>
+        <div class="ag-left">
+          <p class="section-tag">01 — À propos</p>
+          <h2 class="panel-title">Créer des<br/><em>expériences</em></h2>
+          <p class="panel-body">
+            Étudiant en 3ème année de <strong>BUT Informatique</strong> à l'IUT 2 de Grenoble, actuellement en échange à l'<strong>UQAC</strong> pour me spécialiser dans le développement de jeux vidéo. Je suis passionné par l'intersection de la technique, du design et de l'interactivité.
+          </p>
+          <a href="CV Marsande Mathis.pdf" download class="btn-line" target="_blank" rel="noopener">
+            Télécharger mon CV <i class="fas fa-long-arrow-alt-right"></i>
+          </a>
+        </div>
 
-    <div class="project">
-      <h4>Mon carnet de suivi de recherche de stage</h4>
-      <div class="content">
+        <div class="ag-right">
+          <div class="fact-list">
+            <div class="fact">
+              <span class="fk">Formation</span>
+              <span class="fv">BUT Informatique — IUT 2 Grenoble</span>
+            </div>
+            <div class="fact">
+              <span class="fk">Échange</span>
+              <span class="fv">UQAC — Chicoutimi 🇨🇦</span>
+            </div>
+            <div class="fact">
+              <span class="fk">Stage</span>
+              <span class="fv">Mesulog — Documentation & LabView</span>
+            </div>
+            <div class="fact">
+              <span class="fk">Game Dev</span>
+              <span class="fv tags-inline">
+                <span>UE5</span><span>Godot</span><span>Blueprint</span><span>C++</span><span>C</span>
+              </span>
+            </div>
+            <div class="fact">
+              <span class="fk">Web &amp; Apps</span>
+              <span class="fv tags-inline">
+                <span>Java - Kotlin</span><span>JavaScript</span><span>Symfony</span><span>PHP</span><span>SQL</span>
+              </span>
+            </div>
+            <div class="fact">
+              <span class="fk">Outils</span>
+              <span class="fv tags-inline">
+                <span>Git</span><span>Perforce</span><span>Figma</span><span>Docker</span>
+              </span>
+            </div>
+            <div class="fact">
+              <span class="fk">Loisirs</span>
+              <span class="fv">Jeux vidéo 🎮 · Musique 🎵 · Auto 🚗</span>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </section>
+
+    <!-- PANEL 2 — PROJECTS -->
+    <section class="panel" id="p2" data-label="Projets">
+      <div class="bg-digit" aria-hidden="true">03</div>
+      <div class="panel-content projects-layout">
+
+        <div class="projects-head">
+          <p class="section-tag">02 — Projets</p>
+          <h2 class="panel-title">Réalisations</h2>
+          <div class="ptabs">
+            <button class="ptab active" data-ptab="academic">Académiques</button>
+            <button class="ptab" data-ptab="personal">Personnels</button>
+          </div>
+        </div>
+
+        <div class="plist active" id="pl-academic">
+          <div class="pe" data-index="0"><span class="pe-n">01</span><span class="pe-t">Puissance 4 vs IA</span><span class="pe-tags"><span>UE5</span><span>C++</span><span>Minimax</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="1"><span class="pe-n">02</span><span class="pe-t">Tower Defense &amp; Editor Tool</span><span class="pe-tags"><span>UE5</span><span>C++</span><span>Data Assets</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="2"><span class="pe-n">03</span><span class="pe-t">Exploration Spatiale &amp; Gravité</span><span class="pe-tags"><span>UE5</span><span>C++</span><span>Physics</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="3"><span class="pe-n">04</span><span class="pe-t">Space Shooter &amp; Revision Control</span><span class="pe-tags"><span>UE5</span><span>GitHub</span><span>Perforce</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="4"><span class="pe-n">05</span><span class="pe-t">Site web institutionnel</span><span class="pe-tags"><span>HTML/CSS</span><span>JS</span><span>UX/UI</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="5"><span class="pe-n">06</span><span class="pe-t">Naufrage du Titanic / Réseaux</span><span class="pe-tags"><span>Debian</span><span>PostgreSQL</span><span>Apache</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="6"><span class="pe-n">07</span><span class="pe-t">Installation services réseaux</span><span class="pe-tags"><span>Debian</span><span>Bash</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="7"><span class="pe-n">08</span><span class="pe-t">Application patrimoine culturel</span><span class="pe-tags"><span>Symfony</span><span>PHP</span><span>SQL</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+          <div class="pe" data-index="8"><span class="pe-n">09</span><span class="pe-t">Carnet de suivi de stage</span><span class="pe-tags"><span>Symfony</span><span>Android</span><span>Docker</span></span><i class="fas fa-arrow-right pe-arr"></i></div>
+        </div>
+
+        <div class="plist" id="pl-personal">
+          <a href="https://majestic-cheesecake-300c0b.netlify.app/" target="_blank" rel="noopener" class="personal-box pbox-link">
+            <div class="pbox-header">
+              <span class="pbox-title">Jeu Incrémental</span>
+              <span class="pbox-badge">En développement</span>
+            </div>
+            <p class="pbox-desc">Un jeu idle développé en JavaScript vanilla — clique, accumule, progresse.</p>
+            <span class="pbox-cta">Jouer <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PANEL 3 — CONTACT -->
+    <section class="panel" id="p3" data-label="Contact">
+      <div class="bg-digit" aria-hidden="true">04</div>
+      <div class="panel-content contact-layout">
+
+        <div class="cl-left">
+          <p class="section-tag">03 — Contact</p>
+          <h2 class="panel-title">Travaillons<br/><em>ensemble</em></h2>
+          <p class="panel-body">
+            Projet, stage, ou simplement échanger — n'hésitez pas à me contacter.
+          </p>
+          <div class="clinks">
+            <a href="mailto:mathis.marsande@etu.univ-grenoble-alpes.fr" class="clink">
+              <i class="fas fa-envelope"></i><span>Email</span><i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://github.com/Matchelou38/" target="_blank" rel="noopener" class="clink">
+              <i class="fab fa-github"></i><span>GitHub</span><i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/mathis-marsande-6508a8271/" target="_blank" rel="noopener" class="clink">
+              <i class="fab fa-linkedin"></i><span>LinkedIn</span><i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <form id="contact-form" class="cl-form" action="https://formspree.io/f/xovqvjwa" method="POST">
+          <div class="form-row">
+            <div class="fw">
+              <input type="text" name="name" id="fn" placeholder=" " required autocomplete="off"/>
+              <label for="fn">Nom</label>
+            </div>
+            <div class="fw">
+              <input type="email" name="email" id="fe" placeholder=" " required autocomplete="off"/>
+              <label for="fe">Email</label>
+            </div>
+          </div>
+          <div class="fw">
+            <textarea name="message" id="fm" placeholder=" " rows="4" required></textarea>
+            <label for="fm">Message</label>
+          </div>
+          <button type="submit" class="btn-send">
+            Envoyer <i class="fas fa-paper-plane"></i>
+          </button>
+          <p id="form-ok">Message envoyé !</p>
+        </form>
+
+      </div>
+      <footer class="panel-footer">&copy; 2026 Mathis Marsande</footer>
+    </section>
+
+  </main><!-- /panels-wrap -->
+
+  <!-- MODAL -->
+  <div id="modal">
+    <div id="modal-inner">
+      <button id="modal-close">&times;</button>
+      <div id="modal-media"></div>
+      <div id="modal-info"></div>
     </div>
   </div>
-  </br>
 
-  <!-- Projets personnels -->
-  <div class="project-category-personal" data-aos="fade-up" data-aos-delay="200">
-    <h3>Projets personnels</h3>
-
-    <div class="project-personal">
-      <h4>Mon jeu incrémental <span class="badge-dev">En développement</span></h4>
-      <iframe 
-        src="https://majestic-cheesecake-300c0b.netlify.app/" 
-        title="Jeu incrémental" 
-        width="100%" 
-        height="250px" 
-        style="border:none; border-radius:8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
-        loading="lazy"
-      ></iframe>
-    </div>
-
-    <!-- Ajoute ici d'autres projets personnels si besoin -->
-  </div>
-</section>
-
-
-<section id="contact" data-aos="fade-up">
-  <h2>Contact</h2>
-  <p>Vous souhaitez me contacter ? N'hésitez pas à m'envoyer un message !</p>
-
-  <div class="contact-infos">
-    <ul>
-      <li><i class="fas fa-envelope"></i> mathis.marsande@etu.univ-grenoble-alpes.fr</li>
-      <li><i class="fab fa-github"></i> <a href="https://github.com/Matchelou38/" target="_blank">Mon GitHub</a></li>
-      <li><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/mathis-marsande-6508a8271/" target="_blank">Mon LinkedIn</a></li>
-    </ul>
-    
-  </div>
-
-<form action="https://formspree.io/f/xovqvjwa" method="POST">
-  <input type="text" name="name" placeholder="Votre nom" required>
-  <input type="email" name="email" placeholder="Votre email" required>
-  <textarea name="message" placeholder="Votre message" required></textarea>
-  <button type="submit">Envoyer</button>
-</form>
-<p id="form-message" style="display:none; color: green; font-weight: bold;">Message envoyé !</p>
-
-</section>
-
-
-  <footer>
-    <p>&copy; 2025 Mathis Marsande</p>
-  </footer>
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script>
-  AOS.init();
-</script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
-  window.onload = () => {
-    lucide.createIcons();
-  };
-</script>
-<script src="script.js"></script>
-<a href="#" class="back-to-top" aria-label="Remonter en haut">
-  <svg width="32" height="32" viewBox="0 0 32 32">
-    <polyline points="8,20 16,12 24,20" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</a>
-
-<div id="project-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal">&times;</span>
-    <div class="modal-carousel">
-      <!-- Les images du carrousel seront injectées ici -->
-    </div>
-    <div class="modal-details">
-      <!-- Les détails du projet seront injectés ici -->
-    </div>
-  </div>
-</div>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
