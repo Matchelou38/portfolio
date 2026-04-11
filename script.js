@@ -9,6 +9,71 @@ gsap.registerPlugin(ScrollTrigger);
    PROJECT DATA
 ───────────────────────────────────────── */
 const projectData = [
+    {
+    title: "Endless Runner (UE5)",
+    youtube: "ptaOeyNE72s",
+    details: `<div class="project-details-wrapper">
+      <div class="tech-stack">
+        <span class="stack-item">UE5</span>
+        <span class="stack-item">C++</span>
+        <span class="stack-item">Procedural</span>
+        <span class="stack-item">Gameplay</span>
+      </div>
+
+      <p>Réalisation d’un <strong>Endless Runner</strong> à l'<strong>UQAC (Canada)</strong>, avec génération procédurale et gameplay dynamique.</p>
+
+      <div class="detail-group">
+        <h5><i class="fas fa-running"></i> Gameplay</h5>
+        <ul>
+          <li>Course automatique avec vitesse progressive.</li>
+          <li>Contrôles : déplacement latéral, saut et slide.</li>
+          <li>Collisions avec obstacles entraînant un Game Over.</li>
+        </ul>
+      </div>
+
+      <div class="detail-group">
+        <h5><i class="fas fa-cogs"></i> Systèmes</h5>
+        <ul>
+          <li>Génération procédurale de tuiles infinies.</li>
+          <li>Spawn d’obstacles et de pickups aléatoires.</li>
+          <li>Score basé sur distance et objets collectés.</li>
+        </ul>
+      </div>
+
+    </div>`
+  },
+  {
+    title: "Snake Game (UE5)",
+    youtube: "kX3BO28pyRs",
+    details: `<div class="project-details-wrapper">
+      <div class="tech-stack">
+        <span class="stack-item">UE5</span>
+        <span class="stack-item">C++</span>
+        <span class="stack-item">Gameplay</span>
+        <span class="stack-item">UI</span>
+      </div>
+
+      <p>Implémentation d’un jeu <strong>Snake</strong> complet à l'<strong>UQAC (Canada)</strong>, avec un focus sur le gameplay et la gestion des données.</p>
+
+      <div class="detail-group">
+        <h5><i class="fas fa-gamepad"></i> Gameplay</h5>
+        <ul>
+          <li>Déplacement automatique et contrôles directionnels.</li>
+          <li>Gestion des collisions et croissance du serpent.</li>
+          <li>Pickups avec effets et score dynamique.</li>
+        </ul>
+      </div>
+
+      <div class="detail-group">
+        <h5><i class="fas fa-trophy"></i> UI & Système</h5>
+        <ul>
+          <li>Menu principal, HUD et leaderboard.</li>
+          <li>High Score persistant (sauvegarde).</li>
+        </ul>
+      </div>
+
+    </div>`
+  },
   {
     title: "Puissance 4 vs IA (UE5)",
     youtube: "fkFAj4L8mSo",
