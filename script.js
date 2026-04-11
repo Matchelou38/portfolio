@@ -346,6 +346,17 @@ let wheelBusy = false;
 function onWheel(e) {
   // Don't hijack scroll if modal is open (let it scroll naturally)
   if (document.getElementById('modal').classList.contains('open')) return;
+
+  // If scrolling inside the active project list, let it scroll first
+  const plist = document.querySelector('.plist.active');
+  if (plist && plist.contains(e.target)) {
+    const scrollingDown = e.deltaY > 0;
+    const atBottom = plist.scrollTop >= plist.scrollHeight - plist.clientHeight - 2;
+    const atTop    = plist.scrollTop <= 2;
+    // Only intercept once the list has hit its boundary
+    if ((scrollingDown && !atBottom) || (!scrollingDown && !atTop)) return;
+  }
+
   e.preventDefault();
   if (wheelBusy || isAnimating) return;
   wheelBusy = true;
@@ -358,7 +369,18 @@ function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
 function onTouchEnd(e) {
   if (document.getElementById('modal').classList.contains('open')) return;
   const dy = touchStartY - e.changedTouches[0].clientY;
-  if (Math.abs(dy) > 40) goTo(currentPanel + (dy > 0 ? 1 : -1));
+  if (Math.abs(dy) <= 40) return;
+
+  // If touch is inside the active project list, only change panel at boundaries
+  const plist = document.querySelector('.plist.active');
+  if (plist && plist.contains(e.target)) {
+    const scrollingDown = dy > 0;
+    const atBottom = plist.scrollTop >= plist.scrollHeight - plist.clientHeight - 2;
+    const atTop    = plist.scrollTop <= 2;
+    if ((scrollingDown && !atBottom) || (!scrollingDown && !atTop)) return;
+  }
+
+  goTo(currentPanel + (dy > 0 ? 1 : -1));
 }
 
 /* ─────────────────────────────────────────
