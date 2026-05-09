@@ -1,15 +1,35 @@
-/* =============================================
+/* ============================================================
    PORTFOLIO — Mathis Marsande
-   Cinematic fullscreen GSAP scroll experience
-============================================= */
+   script.js
+
+   Table des matières
+   ──────────────────
+   1.  Données des projets
+   2.  Configuration & état global
+   3.  Système de panels (init, transition, animations)
+   4.  Mise à jour de l'interface (dots, label topbar)
+   5.  Navigation (scroll, touch, clavier)
+   6.  Curseur personnalisé
+   7.  Thème clair / sombre
+   8.  Interactions (dots latéraux, boutons, onglets)
+   9.  Modal projet (ouverture, fermeture, carousel)
+   10. Formulaire de contact
+   11. Animation d'entrée du Hero (premier chargement)
+   12. Point d'entrée — DOMContentLoaded
+============================================================ */
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ─────────────────────────────────────────
-   PROJECT DATA
-───────────────────────────────────────── */
+
+/* ============================================================
+   1. DONNÉES DES PROJETS
+   Chaque objet correspond à une entrée de la liste.
+   - youtube : ID de la vidéo YouTube (si disponible)
+   - images  : tableau de chemins d'images (alternative)
+   - details : HTML injecté dans la colonne droite du modal
+============================================================ */
 const projectData = [
-    {
+  {
     title: "Endless Runner (UE5)",
     youtube: "ptaOeyNE72s",
     details: `<div class="project-details-wrapper">
@@ -19,9 +39,7 @@ const projectData = [
         <span class="stack-item">Procedural</span>
         <span class="stack-item">Gameplay</span>
       </div>
-
-      <p>Réalisation d’un <strong>Endless Runner</strong> à l'<strong>UQAC (Canada)</strong>, avec génération procédurale et gameplay dynamique.</p>
-
+      <p>Réalisation d'un <strong>Endless Runner</strong> à l'<strong>UQAC (Canada)</strong>, avec génération procédurale et gameplay dynamique.</p>
       <div class="detail-group">
         <h5><i class="fas fa-running"></i> Gameplay</h5>
         <ul>
@@ -30,16 +48,14 @@ const projectData = [
           <li>Collisions avec obstacles entraînant un Game Over.</li>
         </ul>
       </div>
-
       <div class="detail-group">
         <h5><i class="fas fa-cogs"></i> Systèmes</h5>
         <ul>
           <li>Génération procédurale de tuiles infinies.</li>
-          <li>Spawn d’obstacles et de pickups aléatoires.</li>
+          <li>Spawn d'obstacles et de pickups aléatoires.</li>
           <li>Score basé sur distance et objets collectés.</li>
         </ul>
       </div>
-
     </div>`
   },
   {
@@ -52,9 +68,7 @@ const projectData = [
         <span class="stack-item">Gameplay</span>
         <span class="stack-item">UI</span>
       </div>
-
-      <p>Implémentation d’un jeu <strong>Snake</strong> complet à l'<strong>UQAC (Canada)</strong>, avec un focus sur le gameplay et la gestion des données.</p>
-
+      <p>Implémentation d'un jeu <strong>Snake</strong> complet à l'<strong>UQAC (Canada)</strong>, avec un focus sur le gameplay et la gestion des données.</p>
       <div class="detail-group">
         <h5><i class="fas fa-gamepad"></i> Gameplay</h5>
         <ul>
@@ -63,7 +77,6 @@ const projectData = [
           <li>Pickups avec effets et score dynamique.</li>
         </ul>
       </div>
-
       <div class="detail-group">
         <h5><i class="fas fa-trophy"></i> UI & Système</h5>
         <ul>
@@ -71,7 +84,6 @@ const projectData = [
           <li>High Score persistant (sauvegarde).</li>
         </ul>
       </div>
-
     </div>`
   },
   {
@@ -162,65 +174,79 @@ const projectData = [
   }
 ];
 
-/* ─────────────────────────────────────────
-   SECTION NAMES
-───────────────────────────────────────── */
+/* Noms affichés dans le label de la topbar pour chaque panel */
 const SECTION_NAMES = ['Accueil', 'À propos', 'Projets', 'Contact'];
 
-/* ─────────────────────────────────────────
-   STATE
-───────────────────────────────────────── */
-let currentPanel = 0;
-let isAnimating  = false;
-const TOTAL      = 4;
-const DURATION   = 0.9;   // seconds per transition
-const EASE       = "expo.out";
 
-/* ─────────────────────────────────────────
-   PANELS CACHE
-───────────────────────────────────────── */
+/* ============================================================
+   2. CONFIGURATION & ÉTAT GLOBAL
+============================================================ */
+
+/* Index du panel actuellement visible */
+let currentPanel = 0;
+
+/* Verrou anti-spam : empêche de déclencher une transition
+   pendant qu'une autre est encore en cours */
+let isAnimating = false;
+
+const TOTAL    = 4;       // nombre de panels
+const DURATION = 0.9;     // durée d'une transition en secondes
+const EASE     = "expo.out";
+
+/* Cache DOM — tous les panels récupérés une seule fois */
 const panels = [...document.querySelectorAll('.panel')];
 
-/* ─────────────────────────────────────────
-   INIT — set initial states
-───────────────────────────────────────── */
+
+/* ============================================================
+   3. SYSTÈME DE PANELS
+============================================================ */
+
+/* ── Initialisation des états initiaux ──────────────────────
+   P0 est directement visible ; tous les autres sont décalés
+   en bas (yPercent) et légèrement réduits (scale) pour préparer
+   l'animation d'entrée.
+─────────────────────────────────────────────────────────────── */
 function initPanels() {
   panels.forEach((p, i) => {
     if (i === 0) {
+      // Panel hero : déjà visible au chargement
       gsap.set(p, { opacity: 1, yPercent: 0, scale: 1, pointerEvents: 'all' });
     } else {
+      // Autres panels : cachés et légèrement décalés vers le bas
       gsap.set(p, { opacity: 0, yPercent: 8, scale: 0.97, pointerEvents: 'none' });
     }
   });
 }
 
-/* ─────────────────────────────────────────
-   TRANSITION: go to panel index
-───────────────────────────────────────── */
+/* ── Transition vers un panel donné ─────────────────────────
+   dir = +1 si on descend, -1 si on remonte.
+   Le panel sortant part dans la direction opposée au mouvement,
+   le panel entrant arrive de la direction du mouvement.
+─────────────────────────────────────────────────────────────── */
 function goTo(index) {
+  // Gardes : transition en cours, même panel, hors limites
   if (isAnimating || index === currentPanel || index < 0 || index >= TOTAL) return;
   isAnimating = true;
 
   const from = panels[currentPanel];
   const to   = panels[index];
-  const dir  = index > currentPanel ? 1 : -1;
+  const dir  = index > currentPanel ? 1 : -1;   // +1 = descend, -1 = remonte
 
-  // Immediately reset the incoming panel's content to hidden state
+  // Remettre à zéro les éléments internes du panel entrant
+  // avant de démarrer l'animation (évite un affichage intermédiaire)
   resetPanelContent(to, index);
 
-  // Outgoing panel: fade out
+  // Panel sortant : fondu vers le haut ou le bas
   gsap.to(from, {
     duration: DURATION,
     opacity: 0,
-    yPercent: dir * -6,
+    yPercent: dir * -6,   // part dans la direction opposée
     scale: 0.96,
     ease: EASE,
-    onComplete: () => {
-      gsap.set(from, { pointerEvents: 'none' });
-    }
+    onComplete: () => gsap.set(from, { pointerEvents: 'none' })
   });
 
-  // Incoming panel: slide in
+  // Panel entrant : slide depuis le haut ou le bas
   gsap.fromTo(to,
     { opacity: 0, yPercent: dir * 7, scale: 0.97 },
     {
@@ -233,153 +259,206 @@ function goTo(index) {
       onComplete: () => {
         isAnimating = false;
         currentPanel = index;
-        animatePanelContent(to, index);
-        updateUI(index);
+        animatePanelContent(to, index);   // anime le contenu interne
+        updateUI(index);                   // met à jour dots + label
       }
     }
   );
 }
 
-/* ─────────────────────────────────────────
-   ANIMATE PANEL INNER CONTENT
-   Each panel has unique choreography
-───────────────────────────────────────── */
-/* Reset all animatable elements in a panel back to their hidden state */
+/* ── Remise à zéro du contenu d'un panel ────────────────────
+   Appelée avant chaque transition entrante.
+   Tue toutes les animations en cours et replace les éléments
+   à leur état "caché" de départ, pour que l'animation suivante
+   parte d'une ardoise propre.
+─────────────────────────────────────────────────────────────── */
 function resetPanelContent(panel, index) {
   const $ = sel => panel.querySelectorAll(sel);
-  gsap.killTweensOf($('*'));   // stop any in-progress animation on this panel
+  gsap.killTweensOf($('*'));   // stoppe toute animation en cours sur ce panel
 
   if (index === 0) {
     gsap.set([$('#hn1'), $('#hn2')], { xPercent: 0, opacity: 0 });
     gsap.set([$('.eyebrow'), $('.hero-sub'), $('.panel-foot')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.hero-actions > *'), { opacity: 0, y: 20 });
-    gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-digit'),  { opacity: 0, scale: 1.08 });
     gsap.set($('.bg-shapes'), { opacity: 0 });
   }
+
   if (index === 1) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.panel-body'), $('.btn-line')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.fact'), { opacity: 0, x: 30 });
-    gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-digit'),  { opacity: 0, scale: 1.08 });
     gsap.set($('.bg-shapes'), { opacity: 0 });
   }
+
   if (index === 2) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.ptabs')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.pe'), { opacity: 0, x: 40 });
-    gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-digit'),  { opacity: 0, scale: 1.08 });
     gsap.set($('.bg-shapes'), { opacity: 0 });
   }
+
   if (index === 3) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.panel-body'), $('.btn-send')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.clink'), { opacity: 0, x: -16 });
-    gsap.set($('.fw'), { opacity: 0, y: 20 });
-    gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.fw'),    { opacity: 0, y: 20 });
+    gsap.set($('.bg-digit'),  { opacity: 0, scale: 1.08 });
     gsap.set($('.bg-shapes'), { opacity: 0 });
   }
 }
 
+/* ── Animation du contenu d'un panel ────────────────────────
+   Chaque panel a sa propre chorégraphie GSAP.
+   Les valeurs numériques en 3e argument des .fromTo()
+   sont des offsets temporels dans la timeline (en secondes).
+   Un offset à 0 = démarre en même temps que le début de la tl.
+─────────────────────────────────────────────────────────────── */
 function animatePanelContent(panel, index) {
-  // Always reset first so re-entering a panel plays clean
+  // Reset d'abord pour que la ré-entrée dans un panel soit toujours propre
   resetPanelContent(panel, index);
 
   const tl = gsap.timeline();
-  const $ = sel => panel.querySelectorAll(sel);
+  const $  = sel => panel.querySelectorAll(sel);
 
+  // ── Panel 0 — Hero ──
   if (index === 0) {
-    tl.fromTo($('#hn1'), { xPercent: -8, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1, ease: EASE }, 0)
-      .fromTo($('#hn2'), { xPercent: 8, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1, ease: EASE }, 0.08)
-      .fromTo($('.eyebrow'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .8, ease: EASE }, 0.2)
-      .fromTo($('.hero-sub'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.3)
-      .fromTo($('.hero-actions > *'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .7, ease: EASE, stagger: 0.1 }, 0.4)
-      .fromTo($('.panel-foot'), { opacity: 0 }, { opacity: 1, duration: .6, ease: EASE }, 0.6)
-      .fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0.2)
-      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0.4);
+    tl
+      // Lignes du nom : slide depuis gauche/droite en parallèle
+      .fromTo($('#hn1'), { xPercent: -8, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1,   ease: EASE }, 0)
+      .fromTo($('#hn2'), { xPercent:  8, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1,   ease: EASE }, 0.08)
+      // Éléments secondaires en cascade
+      .fromTo($('.eyebrow'),        { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .8, ease: EASE }, 0.2)
+      .fromTo($('.hero-sub'),       { opacity: 0, y:  16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.3)
+      .fromTo($('.hero-actions > *'),{ opacity: 0, y:  20 }, { opacity: 1, y: 0, duration: .7, ease: EASE, stagger: 0.1 }, 0.4)
+      .fromTo($('.panel-foot'),     { opacity: 0 },         { opacity: 1,        duration: .6, ease: EASE }, 0.6)
+      // Calques décoratifs (légèrement décalés pour qu'ils n'écrasent pas le texte)
+      .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0.2)
+      .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0.4);
   }
 
+  // ── Panel 1 — À propos ──
   if (index === 1) {
-    tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
-      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
+    tl
+      // Calques déco d'abord (en fond)
+      .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)
+      // Contenu texte en cascade
       .fromTo($('.section-tag'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .7, ease: EASE }, 0)
-      .fromTo($('.panel-title'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .9, ease: EASE }, 0.1)
-      .fromTo($('.panel-body'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .8, ease: EASE }, 0.25)
-      .fromTo($('.btn-line'), { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: .6, ease: EASE }, 0.4)
-      .fromTo($('.fact'), { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .6, ease: EASE, stagger: 0.06 }, 0.15);
+      .fromTo($('.panel-title'), { opacity: 0, y:  30 }, { opacity: 1, y: 0, duration: .9, ease: EASE }, 0.1)
+      .fromTo($('.panel-body'),  { opacity: 0, y:  20 }, { opacity: 1, y: 0, duration: .8, ease: EASE }, 0.25)
+      .fromTo($('.btn-line'),    { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: .6, ease: EASE }, 0.4)
+      // Rangées du tableau : stagger pour un effet de "balayage" de gauche à droite
+      .fromTo($('.fact'),        { opacity: 0, x:  30 }, { opacity: 1, x: 0, duration: .6, ease: EASE, stagger: 0.06 }, 0.15);
   }
 
+  // ── Panel 2 — Projets ──
   if (index === 2) {
-    tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
-      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
+    tl
+      .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)
       .fromTo($('.section-tag'), { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .6, ease: EASE }, 0)
       .fromTo($('.panel-title'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .8, ease: EASE }, 0.1)
-      .fromTo($('.ptabs'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .5, ease: EASE }, 0.3)
-      .fromTo($('.pe'), { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: .55, ease: EASE, stagger: 0.055 }, 0.35);
+      .fromTo($('.ptabs'),       { opacity: 0, y:  10 }, { opacity: 1, y: 0, duration: .5, ease: EASE }, 0.3)
+      // Entrées de projet : stagger pour un défilement vertical progressif
+      .fromTo($('.pe'),          { opacity: 0, x:  40 }, { opacity: 1, x: 0, duration: .55, ease: EASE, stagger: 0.055 }, 0.35);
   }
 
+  // ── Panel 3 — Contact ──
   if (index === 3) {
-    tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
-      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
+    tl
+      .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)
       .fromTo($('.section-tag'), { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .6, ease: EASE }, 0)
       .fromTo($('.panel-title'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .9, ease: EASE }, 0.1)
-      .fromTo($('.panel-body'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.25)
+      .fromTo($('.panel-body'),  { opacity: 0, y:  16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.25)
+      // Liens de contact : slide depuis la gauche en stagger
       .fromTo($('.clink'), { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: .5, ease: EASE, stagger: 0.08 }, 0.35)
-      .fromTo($('.fw'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .6, ease: EASE, stagger: 0.07 }, 0.3)
+      // Champs du formulaire : apparition verticale en stagger
+      .fromTo($('.fw'),    { opacity: 0, y:  20 }, { opacity: 1, y: 0, duration: .6, ease: EASE, stagger: 0.07 }, 0.3)
       .fromTo($('.btn-send'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .5, ease: EASE }, 0.6);
   }
 }
 
-/* ─────────────────────────────────────────
-   UPDATE UI — dots, label, bg digit
-───────────────────────────────────────── */
+
+/* ============================================================
+   4. MISE À JOUR DE L'INTERFACE
+   Synchronise les dots latéraux et le label de la topbar
+   avec le panel actif.
+============================================================ */
 function updateUI(index) {
-  // Side dots
+  // Basculer la classe .active sur le bon point de navigation
   document.querySelectorAll('.side-dot').forEach((d, i) => {
     d.classList.toggle('active', i === index);
   });
 
-  // Section label in topbar
+  // Faire disparaître le label actuel, changer le texte, réapparaître
   const labelEl = document.getElementById('section-label-top');
   if (labelEl) {
-    gsap.to(labelEl, { opacity: 0, y: -8, duration: .2, onComplete: () => {
-      labelEl.textContent = SECTION_NAMES[index];
-      gsap.to(labelEl, { opacity: 1, y: 0, duration: .3 });
-    }});
+    gsap.to(labelEl, {
+      opacity: 0, y: -8, duration: .2,
+      onComplete: () => {
+        labelEl.textContent = SECTION_NAMES[index];
+        gsap.to(labelEl, { opacity: 1, y: 0, duration: .3 });
+      }
+    });
   }
 }
 
-/* ─────────────────────────────────────────
-   SCROLL — wheel + touch
-───────────────────────────────────────── */
-let touchStartY = 0;
-let wheelBusy = false;
+
+/* ============================================================
+   5. NAVIGATION
+
+   Trois modes :
+   - Molette (wheel)  : principal sur desktop
+   - Touch (swipe)    : mobile / tablette
+   - Clavier          : accessibilité (↑ ↓ PageUp PageDown)
+
+   Le scroll de la liste de projets est géré en priorité :
+   on ne change de panel que quand la liste a atteint ses limites.
+============================================================ */
+
+/* ── Scroll molette ── */
+
+let touchStartY = 0;   // position Y du début du touch
+let wheelBusy   = false; // debounce pour éviter plusieurs déclenchements rapides
 
 function onWheel(e) {
-  // Don't hijack scroll if modal is open (let it scroll naturally)
+  // Laisser le modal gérer son propre scroll si ouvert
   if (document.getElementById('modal').classList.contains('open')) return;
 
-  // If scrolling inside the active project list, let it scroll first
+  // Si la molette est sur la liste de projets, vérifier les limites
   const plist = document.querySelector('.plist.active');
   if (plist && plist.contains(e.target)) {
     const scrollingDown = e.deltaY > 0;
     const atBottom = plist.scrollTop >= plist.scrollHeight - plist.clientHeight - 2;
     const atTop    = plist.scrollTop <= 2;
-    // Only intercept once the list has hit its boundary
+    // Laisser la liste défiler tant qu'elle n'est pas à sa limite
     if ((scrollingDown && !atBottom) || (!scrollingDown && !atTop)) return;
   }
 
   e.preventDefault();
+
+  // Debounce : une seule transition par "coup de molette"
   if (wheelBusy || isAnimating) return;
   wheelBusy = true;
   setTimeout(() => { wheelBusy = false; }, 800);
+
   goTo(currentPanel + (e.deltaY > 0 ? 1 : -1));
 }
 
-function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
+/* ── Navigation tactile ── */
+
+function onTouchStart(e) {
+  touchStartY = e.touches[0].clientY;
+}
 
 function onTouchEnd(e) {
   if (document.getElementById('modal').classList.contains('open')) return;
-  const dy = touchStartY - e.changedTouches[0].clientY;
-  if (Math.abs(dy) <= 40) return;
 
-  // If touch is inside the active project list, only change panel at boundaries
+  const dy = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(dy) <= 40) return;   // seuil minimum de 40px pour éviter les micro-swipes
+
+  // Même logique que onWheel pour la liste de projets
   const plist = document.querySelector('.plist.active');
   if (plist && plist.contains(e.target)) {
     const scrollingDown = dy > 0;
@@ -391,33 +470,41 @@ function onTouchEnd(e) {
   goTo(currentPanel + (dy > 0 ? 1 : -1));
 }
 
-/* ─────────────────────────────────────────
-   KEYBOARD NAVIGATION
-───────────────────────────────────────── */
+/* ── Navigation clavier ── */
+
 function onKey(e) {
   if (document.getElementById('modal').classList.contains('open')) return;
   if (e.key === 'ArrowDown' || e.key === 'PageDown') goTo(currentPanel + 1);
   if (e.key === 'ArrowUp'   || e.key === 'PageUp')   goTo(currentPanel - 1);
 }
 
-/* ─────────────────────────────────────────
-   CURSOR
-───────────────────────────────────────── */
+
+/* ============================================================
+   6. CURSEUR PERSONNALISÉ
+   Le point (#cursor-dot) suit exactement le pointeur en CSS.
+   L'anneau (#cursor-ring) suit avec une inertie (lerp 10%)
+   via requestAnimationFrame pour un effet de traîne fluide.
+============================================================ */
 function initCursor() {
   const dot  = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
   if (!dot || !ring) return;
 
-  let rx = -100, ry = -100, mx = -100, my = -100;
+  // Position courante de l'anneau (avec inertie)
+  let rx = -100, ry = -100;
+  // Position cible (souris)
+  let mx = -100, my = -100;
 
+  // Mise à jour immédiate du point
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
     dot.style.left = mx + 'px';
     dot.style.top  = my + 'px';
   });
 
+  // Anneau : interpolation linéaire (lerp) vers la cible à chaque frame
   function follow() {
-    rx += (mx - rx) * 0.1;
+    rx += (mx - rx) * 0.1;   // 10% de la distance restante à chaque frame
     ry += (my - ry) * 0.1;
     ring.style.left = rx + 'px';
     ring.style.top  = ry + 'px';
@@ -425,57 +512,69 @@ function initCursor() {
   }
   follow();
 
+  // Agrandir l'anneau au survol des éléments interactifs
   document.querySelectorAll('a, button, .pe, .clink').forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
   });
 }
 
-/* ─────────────────────────────────────────
-   THEME
-───────────────────────────────────────── */
+
+/* ============================================================
+   7. THÈME CLAIR / SOMBRE
+   La classe .light sur <body> bascule les variables CSS.
+   Le choix est persisté dans localStorage.
+============================================================ */
 function initTheme() {
   const btn = document.getElementById('theme-toggle');
   if (!btn) return;
-  if (localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+
+  // Restaurer le thème sauvegardé
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+  }
+
   btn.addEventListener('click', () => {
     document.body.classList.toggle('light');
     localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
   });
 }
 
-/* ─────────────────────────────────────────
-   SIDE DOTS
-───────────────────────────────────────── */
+
+/* ============================================================
+   8. INTERACTIONS
+============================================================ */
+
+/* ── Points de navigation latéraux ── */
 function initDots() {
   document.querySelectorAll('.side-dot').forEach(d => {
     d.addEventListener('click', () => goTo(+d.dataset.goto));
   });
 }
 
-/* ─────────────────────────────────────────
-   PANEL BUTTONS (hero CTAs)
-───────────────────────────────────────── */
+/* ── Boutons avec data-goto (CTA du Hero) ── */
 function initBtns() {
   document.querySelectorAll('[data-goto]').forEach(btn => {
     btn.addEventListener('click', () => goTo(+btn.dataset.goto));
   });
 }
 
-/* ─────────────────────────────────────────
-   TABS
-───────────────────────────────────────── */
+/* ── Onglets Académiques / Personnels (panel Projets) ── */
 function initTabs() {
   document.querySelectorAll('.ptab').forEach(tab => {
     tab.addEventListener('click', () => {
+      // Désactiver tous les onglets et listes
       document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.plist').forEach(l => l.classList.remove('active'));
+
+      // Activer l'onglet cliqué et sa liste correspondante
       tab.classList.add('active');
       const list = document.getElementById('pl-' + tab.dataset.ptab);
       if (list) {
         list.classList.add('active');
-        // Animate entries in
-        gsap.fromTo(list.querySelectorAll('.pe, .personal-box'),
+        // Animer les entrées de la liste nouvellement affichée
+        gsap.fromTo(
+          list.querySelectorAll('.pe, .personal-box'),
           { opacity: 0, x: 30 },
           { opacity: 1, x: 0, duration: .5, ease: EASE, stagger: 0.05 }
         );
@@ -484,9 +583,15 @@ function initTabs() {
   });
 }
 
-/* ─────────────────────────────────────────
-   MODAL
-───────────────────────────────────────── */
+
+/* ============================================================
+   9. MODAL PROJET
+   S'ouvre au clic sur une entrée de projet (.pe).
+   Construit dynamiquement le carousel média + les informations
+   à partir des données dans projectData[idx].
+============================================================ */
+
+/* ── Ouverture ── */
 function openModal(idx) {
   const info = projectData[idx];
   if (!info) return;
@@ -495,16 +600,21 @@ function openModal(idx) {
   const media = document.getElementById('modal-media');
   const minfo = document.getElementById('modal-info');
 
-  /* ── Construire les items ── */
+  // Construire les slides du carousel selon le type de média
   let items    = [];
   let hasVideo = false;
 
   if (info.youtube) {
+    // Projet avec vidéo YouTube — un seul slide en iframe
     hasVideo = true;
     items = [`<div class="car-item active" data-index="0">
-      <iframe src="https://www.youtube.com/embed/${info.youtube}?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe src="https://www.youtube.com/embed/${info.youtube}?rel=0"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
     </div>`];
   } else if (info.images) {
+    // Projet avec images — un slide par image
     items = info.images.map((src, i) =>
       `<div class="car-item${i === 0 ? ' active' : ''}" data-index="${i}">
         <img src="${src}" alt="${info.title}" loading="lazy"/>
@@ -514,14 +624,15 @@ function openModal(idx) {
 
   const multi = items.length > 1;
 
-  /* ── Tabs vidéo (plusieurs clips) ── */
+  // Onglets (infrastructure disponible, non utilisée actuellement)
   const tabsHtml = '';
 
-  /* ── Flèches (multi-images uniquement) ── */
+  // Flèches de navigation uniquement pour les projets multi-images
   const arrows = (!hasVideo && multi) ? `
     <button class="car-prev"><i class="fas fa-chevron-left"></i></button>
     <button class="car-next"><i class="fas fa-chevron-right"></i></button>` : '';
 
+  // Injecter le carousel dans la colonne gauche
   media.innerHTML = items.length ? `
     <div class="carousel">
       ${tabsHtml}
@@ -531,148 +642,186 @@ function openModal(idx) {
       </div>
     </div>` : '';
 
-  /* ── Colonne droite : titre + détails ── */
+  // Injecter titre + détails dans la colonne droite
   minfo.innerHTML = `<h2>${info.title}</h2><div>${info.details}</div>`;
 
   modal.classList.add('open');
 
-  /* ── Navigation flèches (multi-images) ── */
+  // Brancher la navigation flèches si plusieurs images
   if (!hasVideo && multi) {
     let cur = 0;
     const itemEls = modal.querySelectorAll('.car-item');
     const prev    = modal.querySelector('.car-prev');
     const next    = modal.querySelector('.car-next');
+
+    // Fonction de navigation circulaire
     const go = i => {
       cur = (i + itemEls.length) % itemEls.length;
       itemEls.forEach((el, j) => el.classList.toggle('active', j === cur));
     };
+
     prev && prev.addEventListener('click', () => go(cur - 1));
     next && next.addEventListener('click', () => go(cur + 1));
   }
 }
 
+/* ── Fermeture ── */
 function closeModal() {
   const modal = document.getElementById('modal');
   modal.classList.remove('open');
-  // Stop YouTube iframes by clearing their src
+  // Couper les iframes YouTube pour stopper la lecture audio/vidéo
   modal.querySelectorAll('iframe').forEach(f => { f.src = ''; });
   modal.querySelectorAll('video').forEach(v => v.pause());
 }
 
+/* ── Initialisation des événements du modal ── */
 function initModal() {
   const modal = document.getElementById('modal');
   if (!modal) return;
 
+  // Fermeture : bouton ×, clic sur l'overlay, touche Échap
   document.getElementById('modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+  // Ouvrir le modal au clic sur une entrée de projet
   document.querySelectorAll('.pe').forEach(el => {
     el.addEventListener('click', () => openModal(+el.dataset.index));
   });
 }
 
-/* ─────────────────────────────────────────
-   CONTACT FORM
-───────────────────────────────────────── */
+
+/* ============================================================
+   10. FORMULAIRE DE CONTACT
+   Soumission asynchrone via Formspree.
+   Le bouton est désactivé pendant l'envoi pour éviter le double-submit.
+   Un message de confirmation apparaît 4 secondes puis disparaît.
+============================================================ */
 function initForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
+
     const btn = form.querySelector('.btn-send');
-    btn.textContent = '…';
+    btn.textContent = '…';     // indicateur de chargement
     btn.disabled = true;
+
     try {
       const res = await fetch(form.action, {
         method: 'POST',
         headers: { Accept: 'application/json' },
         body: new FormData(form)
       });
+
       if (res.ok) {
         form.reset();
         const ok = document.getElementById('form-ok');
         if (ok) {
           ok.style.display = 'block';
+          // Apparition animée
           gsap.fromTo(ok, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4 });
-          setTimeout(() => gsap.to(ok, { opacity: 0, duration: .3, onComplete: () => ok.style.display='none' }), 4000);
+          // Disparition après 4 secondes
+          setTimeout(() => {
+            gsap.to(ok, { opacity: 0, duration: .3, onComplete: () => ok.style.display = 'none' });
+          }, 4000);
         }
       }
-    } catch(_) {}
+    } catch (_) {
+      // Échec silencieux — l'utilisateur peut réessayer
+    }
+
+    // Restaurer le bouton dans tous les cas
     btn.innerHTML = 'Envoyer <i class="fas fa-paper-plane"></i>';
     btn.disabled = false;
   });
 }
 
-/* ─────────────────────────────────────────
-   HERO ENTRY ANIMATION (first load)
-───────────────────────────────────────── */
+
+/* ============================================================
+   11. ANIMATION D'ENTRÉE DU HERO (premier chargement)
+   Jouée une seule fois au chargement de la page.
+   Légèrement différente de animatePanelContent(p0) :
+   durées plus longues, délai initial, pour un effet plus
+   "cinématique" à l'arrivée sur le site.
+============================================================ */
 function heroEntrance() {
   const p0 = panels[0];
   const tl = gsap.timeline({ delay: 0.05 });
-  tl.fromTo(p0.querySelector('#hn1'),
-    { xPercent: -10, opacity: 0 },
-    { xPercent: 0, opacity: 1, duration: 1.2, ease: EASE }
-  )
-  .fromTo(p0.querySelector('#hn2'),
-    { xPercent: 10, opacity: 0 },
-    { xPercent: 0, opacity: 1, duration: 1.2, ease: EASE },
-    0.1
-  )
-  .fromTo(p0.querySelector('.eyebrow'),
-    { opacity: 0, x: -24 },
-    { opacity: 1, x: 0, duration: .9, ease: EASE },
-    0.3
-  )
-  .fromTo(p0.querySelector('.hero-sub'),
-    { opacity: 0, y: 18 },
-    { opacity: 1, y: 0, duration: .8, ease: EASE },
-    0.45
-  )
-  .fromTo(p0.querySelectorAll('.hero-actions > *'),
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: .7, ease: EASE, stagger: 0.1 },
-    0.55
-  )
-  .fromTo(p0.querySelector('.panel-foot'),
-    { opacity: 0 },
-    { opacity: 1, duration: .8, ease: EASE },
-    0.75
-  )
-  .fromTo(p0.querySelector('.bg-digit'),
-    { opacity: 0, scale: 1.08 },
-    { opacity: 1, scale: 1, duration: 1.5, ease: EASE },
-    0.2
-  )
-  .fromTo(p0.querySelector('.bg-shapes'),
-    { opacity: 0 },
-    { opacity: 1, duration: 2, ease: EASE },
-    0.4
-  );
+
+  tl
+    .fromTo(p0.querySelector('#hn1'),
+      { xPercent: -10, opacity: 0 },
+      { xPercent: 0, opacity: 1, duration: 1.2, ease: EASE }
+    )
+    .fromTo(p0.querySelector('#hn2'),
+      { xPercent: 10, opacity: 0 },
+      { xPercent: 0, opacity: 1, duration: 1.2, ease: EASE },
+      0.1
+    )
+    .fromTo(p0.querySelector('.eyebrow'),
+      { opacity: 0, x: -24 },
+      { opacity: 1, x: 0, duration: .9, ease: EASE },
+      0.3
+    )
+    .fromTo(p0.querySelector('.hero-sub'),
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, duration: .8, ease: EASE },
+      0.45
+    )
+    .fromTo(p0.querySelectorAll('.hero-actions > *'),
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: .7, ease: EASE, stagger: 0.1 },
+      0.55
+    )
+    .fromTo(p0.querySelector('.panel-foot'),
+      { opacity: 0 },
+      { opacity: 1, duration: .8, ease: EASE },
+      0.75
+    )
+    // Calques décoratifs : s'estompent progressivement en arrière-plan
+    .fromTo(p0.querySelector('.bg-digit'),
+      { opacity: 0, scale: 1.08 },
+      { opacity: 1, scale: 1, duration: 1.5, ease: EASE },
+      0.2
+    )
+    .fromTo(p0.querySelector('.bg-shapes'),
+      { opacity: 0 },
+      { opacity: 1, duration: 2, ease: EASE },
+      0.4
+    );
 }
 
-/* ─────────────────────────────────────────
-   INIT ALL
-───────────────────────────────────────── */
+
+/* ============================================================
+   12. POINT D'ENTRÉE — DOMContentLoaded
+   Initialise tous les modules dans l'ordre, branche les
+   événements globaux, puis déclenche l'animation d'entrée.
+============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+
+  // Modules core
   initPanels();
   initCursor();
   initTheme();
+
+  // Interactions
   initDots();
   initBtns();
   initTabs();
   initModal();
   initForm();
 
-  // Bind scroll/touch/keyboard
+  // Événements de navigation
   window.addEventListener('wheel',      onWheel,      { passive: false });
   window.addEventListener('touchstart', onTouchStart, { passive: true  });
   window.addEventListener('touchend',   onTouchEnd,   { passive: true  });
   window.addEventListener('keydown',    onKey);
 
-  // Hero entrance
-  heroEntrance();
-
-  // Make p0 fully visible from start
+  // Rendre P0 immédiatement visible (GSAP l'a mis à opacity:0 via initPanels)
   gsap.set(panels[0], { opacity: 1, yPercent: 0, scale: 1, pointerEvents: 'all' });
+
+  // Animation d'entrée cinématique du Hero
+  heroEntrance();
 });

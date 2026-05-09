@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- ═══ Encodage & viewport ═══ -->
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mathis Marsande — Portfolio</title>
+
+  <!-- ═══ Polices Google : Cormorant Garamond (titres) + Geist Mono (UI) ═══ -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- ═══ Icônes Font Awesome (contact, projets, hobbies) ═══ -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- ═══ Styles principaux ═══ -->
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <!-- CURSOR -->
+  <!-- ═══════════════════════════════════════════════
+       CURSEUR PERSONNALISÉ
+       Deux éléments positionnés en JS :
+       - #cursor-dot  : point central réactif
+       - #cursor-ring : anneau avec inertie (lerp)
+  ═══════════════════════════════════════════════ -->
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
 
-  <!-- SIDE NAV DOTS -->
+  <!-- ═══════════════════════════════════════════════
+       NAVIGATION LATÉRALE
+       Pastilles cliquables — la classe .active est
+       gérée par updateUI() dans script.js.
+  ═══════════════════════════════════════════════ -->
   <nav id="side-nav" aria-label="Navigation">
     <button class="side-dot active" data-goto="0" aria-label="Accueil"></button>
     <button class="side-dot" data-goto="1" aria-label="À propos"></button>
@@ -24,7 +40,11 @@
     <button class="side-dot" data-goto="3" aria-label="Contact"></button>
   </nav>
 
-  <!-- TOPBAR -->
+  <!-- ═══════════════════════════════════════════════
+       BARRE SUPÉRIEURE
+       Logo | Nom de section (mis à jour via GSAP)
+       | Bouton thème clair/sombre
+  ═══════════════════════════════════════════════ -->
   <header id="topbar">
     <div class="tb-logo">MM</div>
     <div class="tb-right">
@@ -35,9 +55,15 @@
     </div>
   </header>
 
-  <!-- =========================================
-       PANELS CONTAINER
-  ========================================= -->
+  <!-- ═══════════════════════════════════════════════
+       CONTENEUR DES PANELS
+       Tous les panels sont empilés ici.
+       GSAP gère leur visibility (opacity/yPercent/scale).
+       Structure d'un panel :
+         .bg-digit   → grand chiffre décoratif (z-index 0)
+         .bg-shapes  → constellations SVG     (z-index 0)
+         .panel-content → contenu principal   (z-index 1)
+  ═══════════════════════════════════════════════ -->
   <main id="panels-wrap">
 
     <!-- PANEL 0 — HERO -->
@@ -754,7 +780,13 @@
 
   </main><!-- /panels-wrap -->
 
-  <!-- MODAL -->
+  <!-- ═══════════════════════════════════════════════
+       MODAL PROJET
+       Ouvert par openModal(idx) dans script.js.
+       Grille 2 colonnes :
+         #modal-media → carousel (YouTube / images)
+         #modal-info  → stack techno + détails
+  ═══════════════════════════════════════════════ -->
   <div id="modal">
     <div id="modal-inner">
       <button id="modal-close">&times;</button>
@@ -763,7 +795,11 @@
     </div>
   </div>
 
-  <!-- GSAP -->
+  <!-- ═══════════════════════════════════════════════
+       SCRIPTS
+       GSAP + ScrollTrigger chargés depuis CDN,
+       puis script.js du portfolio.
+  ═══════════════════════════════════════════════ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="script.js"></script>

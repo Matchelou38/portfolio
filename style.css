@@ -1,89 +1,170 @@
-/* =============================================
-   VARIABLES
-============================================= */
+/* ============================================================
+   PORTFOLIO — Mathis Marsande
+   style.css
+
+   Table des matières
+   ──────────────────
+   1.  Imports & polices
+   2.  Design tokens (variables CSS)
+   3.  Reset global
+   4.  Curseur personnalisé
+   5.  Barre de navigation supérieure (topbar)
+   6.  Points de navigation latéraux
+   7.  Système de panels (conteneur, base, calques décoratifs)
+   8.  Panel 0 — Accueil (Hero)
+   9.  Panel 1 — À propos
+   10. Panel 2 — Projets
+   11. Panel 3 — Contact
+   12. Footer de panel
+   13. Modal projet
+   14. Responsive
+============================================================ */
+
+
+/* ============================================================
+   1. IMPORTS & POLICES
+   - Cormorant Garamond : titres serif, élégants et légers
+   - Geist Mono         : corps de texte UI, monospace moderne
+============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Geist+Mono:wght@300;400;500&display=swap');
 
+
+/* ============================================================
+   2. DESIGN TOKENS
+   Toutes les valeurs visuelles passent par ces variables.
+   Changer un token ici propage la modification partout.
+============================================================ */
 :root {
-  --bg:       #0c0c0c;
-  --bg2:      #111111;
-  --surface:  #181818;
-  --border:   rgba(255,255,255,0.06);
-  --border2:  rgba(255,255,255,0.12);
-  --text:     #f2f0eb;
-  --text2:    #888880;
-  --text3:    #444;
-  --accent:   #c8a96e;        /* Or mat — luxe, gaming premium */
-  --accent-d: rgba(200,169,110,.15);
-  --font-d:   'Cormorant Garamond', Georgia, serif;
-  --font-m:   'Geist Mono', 'Courier New', monospace;
-  --ease:     cubic-bezier(0.19, 1, 0.22, 1);
-  --ease2:    cubic-bezier(0.65, 0, 0.35, 1);
+  /* Fonds */
+  --bg:       #0c0c0c;                    /* fond principal — très sombre */
+  --bg2:      #111111;                    /* fond secondaire (modal) */
+  --surface:  #181818;                    /* surfaces élevées (cartes, hover) */
+
+  /* Bordures */
+  --border:   rgba(255,255,255,0.06);     /* séparateurs discrets */
+  --border2:  rgba(255,255,255,0.12);     /* bordures UI + constellations */
+
+  /* Texte */
+  --text:     #f2f0eb;                    /* texte principal */
+  --text2:    #888880;                    /* texte secondaire (descriptions) */
+  --text3:    #444;                       /* texte tertiaire (labels, footer) */
+
+  /* Accent — or mat, gaming premium */
+  --accent:   #c8a96e;
+  --accent-d: rgba(200,169,110,.15);      /* version semi-transparente pour fonds */
+
+  /* Polices */
+  --font-d: 'Cormorant Garamond', Georgia, serif;
+  --font-m: 'Geist Mono', 'Courier New', monospace;
+
+  /* Courbes d'animation personnalisées */
+  --ease:  cubic-bezier(0.19, 1, 0.22, 1);   /* expo-out doux — entrées GSAP */
+  --ease2: cubic-bezier(0.65, 0, 0.35, 1);   /* ease-in-out — labels flottants */
 }
 
+/* ── Surcharge mode clair ────────────────────────────────────
+   Rééquilibre les opacités et contrastes sur fond blanc.
+   Les bordures sont renforcées pour que les constellations
+   SVG et les séparateurs restent visibles.
+─────────────────────────────────────────────────────────────── */
 body.light {
   --bg:      #f6f4f0;
   --bg2:     #edeae4;
   --surface: #ffffff;
-  --border:  rgba(0,0,0,0.13);   /* was 0.07 — bg-digit + séparateurs */
-  --border2: rgba(0,0,0,0.28);   /* was 0.14 — constellations + UI lines */
+
+  --border:  rgba(0,0,0,0.13);    /* était 0.07 — bg-digit + séparateurs */
+  --border2: rgba(0,0,0,0.28);    /* était 0.14 — constellations + lignes UI */
+
   --text:    #111;
-  --text2:   #555;               /* was #888 — sous-titres, descriptions */
-  --text3:   #777;               /* was #bbb — labels, footer, location tag */
+  --text2:   #555;                /* était #888 — meilleur contraste sur blanc */
+  --text3:   #777;                /* était #bbb — quasi-invisible sur fond clair */
+
   --accent-d: rgba(180,140,70,.1);
 }
 
-/* =============================================
-   RESET
-============================================= */
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+/* ============================================================
+   3. RESET GLOBAL
+============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html { font-size: 16px; }
+
 body {
   font-family: var(--font-m);
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;          /* panels handle their own overflow */
+  overflow: hidden;             /* le scroll est géré par JS, pas le navigateur */
   -webkit-font-smoothing: antialiased;
 }
 
+/* Sélection de texte avec la couleur accent */
 ::selection { background: var(--accent); color: #111; }
 
-/* =============================================
-   CURSOR
-============================================= */
-#cursor-dot, #cursor-ring {
+
+/* ============================================================
+   4. CURSEUR PERSONNALISÉ
+   Deux éléments superposés :
+   - #cursor-dot  : petit point centré, très réactif
+   - #cursor-ring : anneau qui suit avec inertie (lerp en JS)
+   Sur écran tactile (pointer:coarse) les deux sont masqués.
+============================================================ */
+#cursor-dot,
+#cursor-ring {
   position: fixed;
   border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%,-50%);
+  pointer-events: none;         /* ne bloque jamais les clics */
+  z-index: 99999;               /* au-dessus de tout, y compris le modal */
+  transform: translate(-50%, -50%);
 }
+
 #cursor-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   background: var(--accent);
   transition: width .15s, height .15s;
 }
+
 #cursor-ring {
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   border: 1px solid rgba(200,169,110,.5);
   transition: width .3s var(--ease), height .3s var(--ease), border-color .3s;
 }
-body.hovered #cursor-dot { width: 4px; height: 4px; }
+
+/* Survol d'un élément interactif : dot rétrécit, ring s'agrandit */
+body.hovered #cursor-dot  { width: 4px; height: 4px; }
 body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accent); }
 
-@media (pointer:coarse) { #cursor-dot, #cursor-ring { display:none; } }
-
-/* =============================================
-   TOPBAR
-============================================= */
-#topbar {
-  position: fixed; top:0; left:0; right:0;
-  height: 60px;
-  display: flex; align-items:center; justify-content:space-between;
-  padding: 0 3rem;
-  z-index: 900;
-  /* starts transparent, JS adds .visible */
+/* Masquer le curseur custom sur mobile / tablette tactile */
+@media (pointer: coarse) {
+  #cursor-dot,
+  #cursor-ring { display: none; }
 }
 
+
+/* ============================================================
+   5. BARRE DE NAVIGATION SUPÉRIEURE (Topbar)
+   Fixée en haut, toujours visible.
+   z-index 900 : au-dessus des panels (z-index 0–1)
+                 mais sous le modal (9999) et le curseur (99999).
+============================================================ */
+#topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  z-index: 900;
+}
+
+/* Logo "MM" en serif */
 .tb-logo {
   font-family: var(--font-d);
   font-size: 1.4rem;
@@ -92,12 +173,14 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text);
 }
 
+/* Groupe de droite : label de section + bouton thème */
 .tb-right {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
+/* Nom de la section active (ex: "Accueil") — mis à jour via GSAP en JS */
 #section-label-top {
   font-size: 0.68rem;
   letter-spacing: 3px;
@@ -105,22 +188,29 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text2);
 }
 
+/* Bouton bascule clair / sombre */
 #theme-toggle {
   background: none;
   border: 1px solid var(--border2);
   border-radius: 50%;
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   cursor: pointer;
   color: var(--text2);
-  display: flex; align-items:center; justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: .85rem;
   transition: border-color .3s, color .3s;
 }
 #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
-/* =============================================
-   SIDE NAV DOTS
-============================================= */
+
+/* ============================================================
+   6. POINTS DE NAVIGATION LATÉRAUX
+   Colonne de pastilles à droite de l'écran.
+   La pastille active s'allonge en barre verticale.
+============================================================ */
 #side-nav {
   position: fixed;
   right: 2.5rem;
@@ -133,69 +223,100 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 }
 
 .side-dot {
-  width: 6px; height: 6px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--border2);
   border: none;
   cursor: pointer;
-  transition: background .3s, transform .3s var(--ease), height .3s;
   padding: 0;
+  transition: background .3s, transform .3s var(--ease), height .3s;
 }
+
+/* État actif : s'étire en barre avec la couleur accent */
 .side-dot.active {
   background: var(--accent);
   height: 24px;
   border-radius: 3px;
   transform: none;
 }
+
 .side-dot:hover:not(.active) { background: var(--text2); }
 
-/* =============================================
-   PANELS CONTAINER
-============================================= */
+
+/* ============================================================
+   7. SYSTÈME DE PANELS
+
+   Architecture en calques (z-index) à l'intérieur de chaque panel :
+   ┌─────────────────────────────────────────────────┐
+   │  z-index 1  →  .panel-content  (contenu texte)  │
+   │  z-index 1  →  .panel-foot     (bas du hero)    │
+   │  z-index 1  →  .panel-footer   (copyright)      │
+   │  z-index 0  →  .bg-digit       (grand chiffre)  │
+   │  z-index 0  →  .bg-shapes      (constellations) │
+   └─────────────────────────────────────────────────┘
+
+   Tous les panels sont empilés (position: absolute).
+   GSAP contrôle opacity / yPercent / scale pour les transitions.
+============================================================ */
+
+/* Conteneur fixe qui englobe tous les panels */
 #panels-wrap {
   position: fixed;
   top: 0; left: 0;
-  width: 100%; height: 100vh;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
-/* =============================================
-   PANEL BASE
-============================================= */
+/* ── Base d'un panel ── */
 .panel {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100vh;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-
-  /* Default hidden state — GSAP controls this */
-  opacity: 0;
-  pointer-events: none;
+  opacity: 0;               /* caché par défaut — GSAP prend la main */
+  pointer-events: none;     /* désactivé tant qu'invisible */
 }
 
+/* Le panel actif reçoit les interactions */
 .panel.active {
   opacity: 1;
   pointer-events: all;
 }
 
-/* ── Pre-hide all animated content so nothing flashes before GSAP sets it ── */
-/* Hero */
+/* ── Pré-masquage GSAP ────────────────────────────────────────
+   Tous les éléments animés partent à opacity:0 en CSS.
+   Objectif : éviter le "flash" visible avant que GSAP ait pu
+   appeler gsap.set() pour positionner les éléments.
+   Chaque animatePanelContent() les réanime ensuite.
+─────────────────────────────────────────────────────────────── */
+
+/* Panel 0 — Hero */
 #hn1, #hn2, .eyebrow, .hero-sub, .hero-actions > *, .panel-foot { opacity: 0; }
-/* About */
+
+/* Panel 1 — À propos */
 #p1 .section-tag, #p1 .panel-title, #p1 .panel-body, #p1 .btn-line, .fact { opacity: 0; }
-/* Projects */
+
+/* Panel 2 — Projets */
 #p2 .section-tag, #p2 .panel-title, .ptabs, .pe { opacity: 0; }
-/* Contact */
+
+/* Panel 3 — Contact */
 #p3 .section-tag, #p3 .panel-title, #p3 .panel-body, .clink, .fw, .btn-send { opacity: 0; }
-/* bg digits */
-.bg-digit { opacity: 0; }
-/* bg shapes */
+
+/* Calques décoratifs partagés */
+.bg-digit  { opacity: 0; }
 .bg-shapes { opacity: 0; }
 
-/* Large decorative background digit */
+/* ── Grand chiffre décoratif (ex: "01", "02"…) ───────────────
+   Affiché en contour seulement (color:transparent + text-stroke).
+   Positionné en coin bas-droit, partiellement hors de l'écran.
+   clamp() adapte la taille à la largeur du viewport.
+─────────────────────────────────────────────────────────────── */
 .bg-digit {
   position: absolute;
   bottom: -0.15em;
@@ -211,7 +332,11 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   z-index: 0;
 }
 
-/* Decorative SVG shapes — same spirit as bg-digit */
+/* ── Constellations SVG ───────────────────────────────────────
+   Même calque que .bg-digit (z-index 0), couvre tout le panel.
+   overflow:hidden est indispensable : les cercles SVG peuvent être
+   centrés hors-écran — sans ça ils créeraient une scrollbar.
+─────────────────────────────────────────────────────────────── */
 .bg-shapes {
   position: absolute;
   inset: 0;
@@ -226,7 +351,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   height: 100%;
 }
 
-/* panel-content sits above the bg digit */
+/* ── Wrapper du contenu — au-dessus des calques décoratifs ─── */
 .panel-content {
   position: relative;
   z-index: 1;
@@ -236,10 +361,12 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   width: 100%;
 }
 
-/* =============================================
-   PANEL 0 — HERO
-============================================= */
 
+/* ============================================================
+   8. PANEL 0 — ACCUEIL (Hero)
+============================================================ */
+
+/* Ligne d'accroche au-dessus du nom (ex: "Game Dev · BUT…") */
 .eyebrow {
   display: flex;
   align-items: center;
@@ -252,20 +379,24 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   overflow: hidden;
 }
 
+/* Barre dorée à gauche de l'eyebrow */
 .eyebrow-bar {
   display: inline-block;
-  width: 36px; height: 1px;
+  width: 36px;
+  height: 1px;
   background: var(--accent);
   flex-shrink: 0;
 }
 
+/* Grand titre du nom — serif, ligne-height serré */
 .hero-name {
   font-family: var(--font-d);
   line-height: 0.9;
   margin-bottom: 1.8rem;
-  overflow: hidden;
+  overflow: hidden;             /* masque le slide-in des lignes via GSAP */
 }
 
+/* Une ligne du nom (Mathis / Marsande) */
 .hn-line {
   display: block;
   font-size: clamp(5rem, 13vw, 12rem);
@@ -274,11 +405,13 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text);
 }
 
+/* Variante italique en accent pour le nom de famille */
 .hn-line.accent {
   font-style: italic;
   color: var(--accent);
 }
 
+/* Sous-titre court (métier) */
 .hero-sub {
   font-size: 0.82rem;
   letter-spacing: 2px;
@@ -287,13 +420,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   margin-bottom: 3rem;
 }
 
+/* Groupe des boutons d'appel à l'action */
 .hero-actions {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-/* CTA Buttons */
+/* ── Boutons ── */
+
+/* Bouton plein (CTA principal) */
 .btn-cine {
   font-family: var(--font-m);
   font-size: 0.72rem;
@@ -306,7 +442,12 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   cursor: pointer;
   transition: transform .3s var(--ease), box-shadow .3s;
 }
-.btn-cine:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,169,110,.3); }
+.btn-cine:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,169,110,.3);
+}
+
+/* Variante fantôme (contour seulement) */
 .btn-cine.ghost {
   background: transparent;
   color: var(--text2);
@@ -314,6 +455,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 }
 .btn-cine.ghost:hover { color: var(--text); border-color: var(--text2); }
 
+/* Lien texte avec flèche — l'écart avec la flèche s'agrandit au hover */
 .btn-line {
   display: inline-flex;
   align-items: center;
@@ -325,12 +467,12 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   text-decoration: none;
   border-bottom: 1px solid var(--accent);
   padding-bottom: 2px;
-  transition: gap .3s var(--ease);
   margin-top: 2rem;
+  transition: gap .3s var(--ease);
 }
 .btn-line:hover { gap: 16px; }
 
-/* Panel foot */
+/* ── Pied de panel (éléments en bas de l'écran) ── */
 .panel-foot {
   position: absolute;
   bottom: 2.5rem;
@@ -342,6 +484,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   z-index: 1;
 }
 
+/* Localisation en bas à gauche */
 .location-tag {
   font-size: 0.68rem;
   letter-spacing: 2px;
@@ -349,6 +492,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text3);
 }
 
+/* Indicateur de scroll animé */
 .scroll-hint-wrap {
   display: flex;
   align-items: center;
@@ -359,29 +503,37 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text3);
 }
 
+/* Piste de la barre */
 .scroll-hint-bar {
-  width: 50px; height: 2px;
+  width: 50px;
+  height: 2px;
   background: var(--border2);
   position: relative;
   overflow: hidden;
 }
 
+/* Remplissage qui scanne en boucle (animation CSS pure) */
 .scroll-hint-fill {
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: var(--accent);
   animation: scanbar 2s 1s ease-in-out infinite;
 }
 
 @keyframes scanbar {
-  0%   { left: -100%; }
+  0%        { left: -100%; }
   50%, 100% { left: 100%; }
 }
 
-/* =============================================
-   PANEL 1 — ABOUT
-============================================= */
+
+/* ============================================================
+   9. PANEL 1 — À PROPOS
+============================================================ */
+
+/* Grille 2 colonnes : texte à gauche, tableau de faits à droite */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -389,6 +541,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   align-items: center;
 }
 
+/* Label de section (ex: "01 — À propos") */
 .section-tag {
   font-size: 0.65rem;
   letter-spacing: 4px;
@@ -397,6 +550,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   margin-bottom: 1.5rem;
 }
 
+/* Titre principal du panel en grand serif */
 .panel-title {
   font-family: var(--font-d);
   font-size: clamp(2.8rem, 6vw, 5.5rem);
@@ -407,21 +561,24 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text);
 }
 
+/* Mot en italique accent dans le titre (ex: "expériences") */
 .panel-title em {
   font-style: italic;
   color: var(--accent);
 }
 
+/* Corps du texte descriptif */
 .panel-body {
   font-size: 0.88rem;
   line-height: 1.9;
   color: var(--text2);
   max-width: 440px;
 }
-
 .panel-body strong { color: var(--text); font-weight: 500; }
 
-/* Facts / skills table */
+/* ── Tableau de faits / compétences ── */
+
+/* Conteneur en colonne avec séparateurs */
 .fact-list {
   display: flex;
   flex-direction: column;
@@ -429,6 +586,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border-top: 1px solid var(--border);
 }
 
+/* Rangée : label (90px fixe) + valeur (flexible) */
 .fact {
   display: grid;
   grid-template-columns: 90px 1fr;
@@ -438,6 +596,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border-bottom: 1px solid var(--border);
 }
 
+/* Colonne label (ex: "Formation", "Outils"…) */
 .fk {
   font-size: 0.62rem;
   letter-spacing: 2px;
@@ -446,11 +605,13 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   padding-top: 2px;
 }
 
+/* Colonne valeur */
 .fv {
   font-size: 0.82rem;
   color: var(--text2);
 }
 
+/* Icônes Font Awesome inline (loisirs) */
 .hobby-icon {
   color: var(--accent);
   font-size: 0.72rem;
@@ -458,13 +619,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   opacity: 0.85;
 }
 
+/* Tags inline (langages, outils…) */
 .tags-inline {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
 }
 
-.tags-inline span, .pe-tags span {
+/* Pastille tag — partagée avec .pe-tags dans la liste de projets */
+.tags-inline span,
+.pe-tags span {
   font-size: 0.65rem;
   letter-spacing: 1px;
   padding: 2px 8px;
@@ -473,18 +637,23 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border-radius: 20px;
 }
 
-/* =============================================
-   PANEL 2 — PROJECTS
-============================================= */
+
+/* ============================================================
+   10. PANEL 2 — PROJETS
+============================================================ */
+
+/* Le contenu prend toute la hauteur disponible sous la topbar.
+   flex-start : header en haut fixe, liste scrollable en-dessous. */
 #p2 .panel-content {
   display: flex;
   flex-direction: column;
   gap: 0;
-  height: calc(100vh - 120px);   /* full usable height */
-  padding-top: 80px;             /* clear topbar */
+  height: calc(100vh - 120px);   /* hauteur utilisable sans la topbar */
+  padding-top: 80px;             /* dégager la topbar */
   justify-content: flex-start;
 }
 
+/* En-tête : label + titre + onglets alignés en ligne */
 .projects-head {
   flex-shrink: 0;
   display: flex;
@@ -494,33 +663,33 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   flex-wrap: wrap;
 }
 
+/* Le label passe sur sa propre ligne (width:100%) */
 .projects-head .section-tag {
-  /* keep it on its own line above the title */
   width: 100%;
   margin-bottom: 0.4rem;
 }
 
+/* Titre réduit — moins d'espace disponible que sur les autres panels */
 .projects-head .panel-title {
-  font-size: clamp(2rem, 4vw, 3.5rem);   /* smaller than other panels — no overflow */
+  font-size: clamp(2rem, 4vw, 3.5rem);
   margin-bottom: 0;
   flex-shrink: 0;
 }
 
+/* ── Onglets Académiques / Personnels ── */
 .ptabs {
   display: flex;
   gap: 0;
   flex-shrink: 0;
   border-bottom: 1px solid var(--border);
   align-self: flex-end;
-  padding-bottom: 0;
-  margin-bottom: 0;
 }
 
 .ptab {
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  margin-bottom: -1px;          /* la bordure active déborde sur celle du conteneur */
   padding: 8px 0;
   margin-right: 1.5rem;
   font-family: var(--font-m);
@@ -531,25 +700,29 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   cursor: pointer;
   transition: color .25s, border-color .25s;
 }
-.ptab:hover { color: var(--text2); }
+.ptab:hover  { color: var(--text2); }
 .ptab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-/* Project list — takes remaining height and scrolls */
+/* ── Liste de projets — scrollable ── */
+
+/* Cachée par défaut ; .active l'affiche en colonne scrollable */
 .plist { display: none; }
 .plist.active {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1;                      /* occupe tout l'espace restant en hauteur */
   overflow-y: auto;
-  min-height: 0;           /* critical: allows flex child to shrink below content size */
+  min-height: 0;                /* IMPORTANT : sans ça, flex ignore le overflow-y */
   scrollbar-width: thin;
   scrollbar-color: var(--border2) transparent;
   padding-right: 4px;
   padding-top: 0.5rem;
 }
-.plist.active::-webkit-scrollbar { width: 3px; }
+.plist.active::-webkit-scrollbar       { width: 3px; }
 .plist.active::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
+/* ── Ligne de projet ── */
+/* Grille : [numéro] [titre] [tags] [flèche] */
 .pe {
   display: grid;
   grid-template-columns: 2.5rem 1fr auto auto;
@@ -562,25 +735,29 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border-radius: 8px;
 }
 
+/* Barre accent qui slide depuis le bord gauche au hover */
 .pe::before {
   content: '';
   position: absolute;
-  left: 0; top: 50%;
-  width: 0; height: 1px;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 1px;
   background: var(--accent);
   transform: translateY(-50%);
   transition: width .3s var(--ease);
 }
-
-.pe:hover { background: var(--surface); }
+.pe:hover         { background: var(--surface); }
 .pe:hover::before { width: 3px; }
 
+/* Numéro du projet */
 .pe-n {
   font-size: 0.65rem;
   color: var(--accent);
   letter-spacing: 1px;
 }
 
+/* Titre du projet en serif */
 .pe-t {
   font-family: var(--font-d);
   font-size: 1.15rem;
@@ -588,15 +765,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--text);
   transition: color .25s;
 }
-
 .pe:hover .pe-t { color: var(--accent); }
 
+/* Tags techno (UE5, C++…) */
 .pe-tags {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
 
+/* Flèche à droite */
 .pe-arr {
   font-size: 0.75rem;
   color: var(--text3);
@@ -604,7 +782,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 }
 .pe:hover .pe-arr { transform: translateX(4px); color: var(--accent); }
 
-/* Personal card */
+/* ── Carte projet personnel ── */
 .personal-box {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -625,6 +803,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   font-weight: 400;
 }
 
+/* Badge d'état (ex: "En développement") */
 .pbox-badge {
   font-size: 0.62rem;
   letter-spacing: 2px;
@@ -640,6 +819,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   margin-bottom: 1.2rem;
 }
 
+/* Toute la carte est un lien cliquable */
 .pbox-link {
   display: block;
   text-decoration: none;
@@ -652,6 +832,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   transform: translateY(-2px);
 }
 
+/* Call-to-action "Jouer →" */
 .pbox-cta {
   display: inline-flex;
   align-items: center;
@@ -663,13 +844,14 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--accent);
   transition: gap .3s;
 }
-.pbox-link:hover .pbox-cta {
-  gap: 0.9rem;
-}
+.pbox-link:hover .pbox-cta { gap: 0.9rem; }
 
-/* =============================================
-   PANEL 3 — CONTACT
-============================================= */
+
+/* ============================================================
+   11. PANEL 3 — CONTACT
+============================================================ */
+
+/* Grille 2 colonnes : infos/liens à gauche | formulaire à droite */
 .contact-layout {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
@@ -677,6 +859,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   align-items: start;
 }
 
+/* Liste des liens de contact */
 .clinks {
   display: flex;
   flex-direction: column;
@@ -684,6 +867,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   margin-top: 2.5rem;
 }
 
+/* Lien individuel : icône | label | flèche */
 .clink {
   display: flex;
   align-items: center;
@@ -698,27 +882,31 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 }
 
 .clink i:first-child { color: var(--accent); width: 16px; text-align: center; }
-.clink span { flex: 1; }
-.clink i:last-child { font-size: 0.7rem; opacity: 0; transition: opacity .25s, transform .3s; }
-.clink:hover { color: var(--text); padding-left: 8px; }
+.clink span          { flex: 1; }
+.clink i:last-child  { font-size: 0.7rem; opacity: 0; transition: opacity .25s, transform .3s; }
+.clink:hover         { color: var(--text); padding-left: 8px; }
 .clink:hover i:last-child { opacity: 1; transform: translateX(3px); }
 
-/* Form */
+/* ── Formulaire de contact ── */
 .cl-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+/* Ligne nom + email côte à côte */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
+/* Wrapper d'un champ — contexte pour le label flottant */
 .fw { position: relative; }
 
-.fw input, .fw textarea {
+/* Champ texte — design minimaliste, bordure bas uniquement */
+.fw input,
+.fw textarea {
   width: 100%;
   padding: 14px 0;
   background: transparent;
@@ -731,14 +919,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   resize: none;
   transition: border-color .3s;
 }
+.fw input:focus,
+.fw textarea:focus { border-bottom-color: var(--accent); }
 
-.fw input:focus, .fw textarea:focus {
-  border-bottom-color: var(--accent);
-}
-
+/* Label flottant — commence au centre du champ, monte quand rempli.
+   La technique requiert placeholder=" " (espace) sur l'élément HTML
+   pour que :not(:placeholder-shown) fonctionne correctement. */
 .fw label {
   position: absolute;
-  top: 14px; left: 0;
+  top: 14px;
+  left: 0;
   font-size: 0.72rem;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -747,6 +937,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   transition: top .2s var(--ease2), font-size .2s, color .2s;
 }
 
+/* Le label monte et prend la couleur accent lorsque le champ est rempli */
 .fw input:not(:placeholder-shown) ~ label,
 .fw textarea:not(:placeholder-shown) ~ label,
 .fw input:focus ~ label,
@@ -756,6 +947,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   color: var(--accent);
 }
 
+/* Bouton d'envoi — même style que .btn-cine */
 .btn-send {
   display: inline-flex;
   align-items: center;
@@ -773,8 +965,12 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   cursor: pointer;
   transition: transform .3s var(--ease), box-shadow .3s;
 }
-.btn-send:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,169,110,.25); }
+.btn-send:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,169,110,.25);
+}
 
+/* Confirmation d'envoi (apparaît puis disparaît via GSAP) */
 #form-ok {
   display: none;
   font-size: 0.75rem;
@@ -782,13 +978,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   letter-spacing: 2px;
 }
 
-/* =============================================
-   PANEL FOOTER
-============================================= */
+
+/* ============================================================
+   12. FOOTER DE PANEL
+   Affiché uniquement sur le panel Contact (P3).
+============================================================ */
 .panel-footer {
   position: absolute;
   bottom: 2rem;
-  left: 8%; right: 8%;
+  left: 8%;
+  right: 8%;
   font-size: 0.62rem;
   letter-spacing: 2px;
   color: var(--text3);
@@ -796,9 +995,16 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   z-index: 1;
 }
 
-/* =============================================
-   MODAL
-============================================= */
+
+/* ============================================================
+   13. MODAL PROJET
+   Overlay semi-transparent + flou sur le fond.
+   Grille intérieure 2 colonnes :
+   - Gauche : carousel média (YouTube ou images)
+   - Droite  : titre, stack techno, détails du projet
+============================================================ */
+
+/* Overlay — caché, visible avec la classe .open */
 #modal {
   display: none;
   position: fixed;
@@ -810,9 +1016,9 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   justify-content: center;
   padding: 3vh 4%;
 }
-
 #modal.open { display: flex; }
 
+/* Boîte du modal avec animation d'entrée scale + slide */
 #modal-inner {
   position: relative;
   display: grid;
@@ -829,28 +1035,38 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(200,169,110,.06);
 }
 
+/* Animation d'entrée de la boîte */
 @keyframes mIn {
-  from { opacity:0; transform: scale(.96) translateY(24px); }
-  to   { opacity:1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: scale(.96) translateY(24px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* Bouton de fermeture (×) en haut à droite */
 #modal-close {
   position: absolute;
-  top: 12px; right: 14px;
+  top: 12px;
+  right: 14px;
   background: rgba(255,255,255,.04);
   border: 1px solid var(--border2);
   border-radius: 50%;
   color: var(--text2);
-  width: 30px; height: 30px;
+  width: 30px;
+  height: 30px;
   font-size: 1.1rem;
   cursor: pointer;
-  display: flex; align-items:center; justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: border-color .2s, color .2s, background .2s;
   z-index: 20;
 }
-#modal-close:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-d); }
+#modal-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-d);
+}
 
-/* ── Colonne gauche — Media ── */
+/* ── Colonne gauche — Carousel média ── */
 #modal-media {
   grid-column: 1;
   grid-row: 1 / -1;
@@ -869,6 +1085,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   min-height: 0;
 }
 
+/* Onglets de clips (infrastructure prévue, non utilisée actuellement) */
 .car-tabs {
   display: flex;
   gap: 0;
@@ -892,9 +1109,10 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   cursor: pointer;
   transition: color .25s, border-color .25s;
 }
-.car-tab:hover { color: var(--text2); }
+.car-tab:hover  { color: var(--text2); }
 .car-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* Zone d'affichage du média */
 .car-track {
   flex: 1;
   min-height: 0;
@@ -902,6 +1120,7 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   background: #000;
 }
 
+/* Un slide du carousel */
 .car-item {
   display: none;
   position: absolute;
@@ -918,14 +1137,12 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   display: block;
   accent-color: var(--accent);
 }
-
 .car-item iframe {
   width: 100%;
   height: 100%;
   border: none;
   border-radius: 4px;
 }
-
 .car-item img {
   max-width: 100%;
   max-height: 100%;
@@ -934,24 +1151,33 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border-radius: 4px;
 }
 
-.car-prev, .car-next {
-  position: absolute; top:50%; transform:translateY(-50%);
-  width: 34px; height: 34px;
+/* Flèches de navigation (uniquement pour les projets multi-images) */
+.car-prev,
+.car-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
   background: rgba(12,12,12,.8);
   backdrop-filter: blur(6px);
   border: 1px solid var(--border2);
   border-radius: 50%;
   color: var(--text);
   cursor: pointer;
-  display: flex; align-items:center; justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: .75rem;
   transition: background .2s, border-color .2s, color .2s;
   z-index: 10;
 }
-.car-prev:hover, .car-next:hover { background: var(--accent); border-color: var(--accent); color: #111; }
-.car-prev { left: 10px; } .car-next { right: 10px; }
+.car-prev:hover,
+.car-next:hover { background: var(--accent); border-color: var(--accent); color: #111; }
+.car-prev { left: 10px; }
+.car-next  { right: 10px; }
 
-/* ── Colonne droite — Infos ── */
+/* ── Colonne droite — Informations projet ── */
 #modal-info {
   grid-column: 2;
   grid-row: 1 / -1;
@@ -963,9 +1189,10 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   flex-direction: column;
   gap: 1.2rem;
 }
-#modal-info::-webkit-scrollbar { width: 3px; }
+#modal-info::-webkit-scrollbar       { width: 3px; }
 #modal-info::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
+/* Titre du projet avec barre décorative dessous */
 #modal-info h2 {
   font-family: var(--font-d);
   font-size: 1.55rem;
@@ -977,81 +1204,117 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 #modal-info h2::after {
   content: '';
   display: block;
-  width: 32px; height: 1px;
+  width: 32px;
+  height: 1px;
   background: var(--accent);
   margin-top: .8rem;
   opacity: .5;
 }
 
-.project-details-wrapper { display:flex; flex-direction:column; gap:.9rem; }
+.project-details-wrapper { display: flex; flex-direction: column; gap: .9rem; }
 
-.tech-stack { display:flex; flex-wrap:wrap; gap:5px; }
+/* Pastilles de stack technologique */
+.tech-stack { display: flex; flex-wrap: wrap; gap: 5px; }
 .stack-item {
-  font-size:.6rem; letter-spacing:1px;
-  border:1px solid rgba(200,169,110,.4); color:var(--accent);
-  background:rgba(200,169,110,.06);
-  padding:3px 10px;
+  font-size: .6rem;
+  letter-spacing: 1px;
+  border: 1px solid rgba(200,169,110,.4);
+  color: var(--accent);
+  background: rgba(200,169,110,.06);
+  padding: 3px 10px;
   border-radius: 20px;
 }
 
+/* Bloc de détail avec barre gauche animée au hover */
 .detail-group {
-  background:rgba(255,255,255,.02);
-  border-left:2px solid var(--border2);
+  background: rgba(255,255,255,.02);
+  border-left: 2px solid var(--border2);
   border-radius: 0 6px 6px 0;
-  padding:12px 14px;
+  padding: 12px 14px;
   transition: border-color .25s, background .25s;
 }
-.detail-group:hover { border-left-color: var(--accent); background: rgba(200,169,110,.04); }
+.detail-group:hover {
+  border-left-color: var(--accent);
+  background: rgba(200,169,110,.04);
+}
 
 .detail-group h5 {
-  font-family:var(--font-m);
-  font-size:.6rem; letter-spacing:2px; text-transform:uppercase;
-  color:var(--text2); margin-bottom:7px;
-  display:flex; align-items:center; gap:7px;
+  font-family: var(--font-m);
+  font-size: .6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
-.detail-group ul { list-style:none; }
-.detail-group ul li {
-  font-size:.8rem; color:var(--text2);
-  padding:3px 0 3px 16px; position:relative;
-}
-.detail-group ul li::before { content:'→'; position:absolute; left:0; color:var(--accent); font-size:.65rem; }
-#modal-info p { font-size:.83rem; color:var(--text2); line-height:1.8; }
 
-/* =============================================
-   RESPONSIVE
-============================================= */
+/* Liste à puces remplacée par "→" en accent */
+.detail-group ul { list-style: none; }
+.detail-group ul li {
+  font-size: .8rem;
+  color: var(--text2);
+  padding: 3px 0 3px 16px;
+  position: relative;
+}
+.detail-group ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: .65rem;
+}
+
+#modal-info p { font-size: .83rem; color: var(--text2); line-height: 1.8; }
+
+
+/* ============================================================
+   14. RESPONSIVE
+============================================================ */
+
+/* ── Tablette (≤ 900px) ── */
 @media (max-width: 900px) {
-  .about-grid, .contact-layout {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-  .projects-layout {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+
+  /* Grilles 2 colonnes passent en 1 colonne */
+  .about-grid,
+  .contact-layout   { grid-template-columns: 1fr; gap: 3rem; }
+  .projects-layout  { grid-template-columns: 1fr; gap: 2rem; }
+
+  /* Nom hero adapté aux petits écrans */
   .hn-line { font-size: clamp(3.5rem, 16vw, 7rem); letter-spacing: -1px; }
+
+  /* Marges réduites */
   .panel-content { padding: 0 6%; }
-  .panel-foot { left:6%; right:6%; }
-  .panel-footer { left:6%; right:6%; }
+  .panel-foot    { left: 6%; right: 6%; }
+  .panel-footer  { left: 6%; right: 6%; }
+
+  /* Navigation compacte */
   #side-nav { right: 1rem; }
-  #topbar { padding: 0 1.5rem; }
-  /* Modal : bascule en colonne sur petit écran */
+  #topbar   { padding: 0 1.5rem; }
+
+  /* Modal : slide depuis le bas en pleine largeur */
   #modal { padding: 0; align-items: flex-end; }
   #modal-inner {
     grid-template-columns: 1fr;
-    grid-template-rows: 50vw auto;
+    grid-template-rows: 50vw auto;   /* média en haut, texte en bas */
     max-height: 95vh;
     border-radius: 12px 12px 0 0;
   }
   #modal-media { grid-column: 1; grid-row: 1; border-right: none; border-bottom: 1px solid var(--border); }
   #modal-info  { grid-column: 1; grid-row: 2; max-height: 45vh; }
-  .car-track { height: 100%; }
+  .car-track   { height: 100%; }
+
+  /* Formulaire : nom + email empilés */
   .form-row { grid-template-columns: 1fr; }
+
+  /* Tableau de faits : label plus étroit */
   .fact { grid-template-columns: 80px 1fr; }
 }
 
+/* ── Mobile (≤ 600px) ── */
 @media (max-width: 600px) {
   .hero-actions { flex-direction: column; align-items: flex-start; }
-  #side-nav { display: none; }
-  .bg-digit { font-size: 35vw; }
+  #side-nav     { display: none; }           /* trop encombrant sur mobile */
+  .bg-digit     { font-size: 35vw; }
 }
