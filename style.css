@@ -24,11 +24,11 @@ body.light {
   --bg:      #f6f4f0;
   --bg2:     #edeae4;
   --surface: #ffffff;
-  --border:  rgba(0,0,0,0.07);
-  --border2: rgba(0,0,0,0.14);
+  --border:  rgba(0,0,0,0.13);   /* was 0.07 — bg-digit + séparateurs */
+  --border2: rgba(0,0,0,0.28);   /* was 0.14 — constellations + UI lines */
   --text:    #111;
-  --text2:   #888;
-  --text3:   #bbb;
+  --text2:   #555;               /* was #888 — sous-titres, descriptions */
+  --text3:   #777;               /* was #bbb — labels, footer, location tag */
   --accent-d: rgba(180,140,70,.1);
 }
 
@@ -192,6 +192,8 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 #p3 .section-tag, #p3 .panel-title, #p3 .panel-body, .clink, .fw, .btn-send { opacity: 0; }
 /* bg digits */
 .bg-digit { opacity: 0; }
+/* bg shapes */
+.bg-shapes { opacity: 0; }
 
 /* Large decorative background digit */
 .bg-digit {
@@ -207,6 +209,21 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   pointer-events: none;
   user-select: none;
   z-index: 0;
+}
+
+/* Decorative SVG shapes — same spirit as bg-digit */
+.bg-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-shapes svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* panel-content sits above the bg digit */
@@ -432,6 +449,13 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 .fv {
   font-size: 0.82rem;
   color: var(--text2);
+}
+
+.hobby-icon {
+  color: var(--accent);
+  font-size: 0.72rem;
+  margin-left: 1px;
+  opacity: 0.85;
 }
 
 .tags-inline {

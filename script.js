@@ -254,22 +254,26 @@ function resetPanelContent(panel, index) {
     gsap.set([$('.eyebrow'), $('.hero-sub'), $('.panel-foot')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.hero-actions > *'), { opacity: 0, y: 20 });
     gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-shapes'), { opacity: 0 });
   }
   if (index === 1) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.panel-body'), $('.btn-line')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.fact'), { opacity: 0, x: 30 });
     gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-shapes'), { opacity: 0 });
   }
   if (index === 2) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.ptabs')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.pe'), { opacity: 0, x: 40 });
     gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-shapes'), { opacity: 0 });
   }
   if (index === 3) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.panel-body'), $('.btn-send')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.clink'), { opacity: 0, x: -16 });
     gsap.set($('.fw'), { opacity: 0, y: 20 });
     gsap.set($('.bg-digit'), { opacity: 0, scale: 1.08 });
+    gsap.set($('.bg-shapes'), { opacity: 0 });
   }
 }
 
@@ -287,11 +291,13 @@ function animatePanelContent(panel, index) {
       .fromTo($('.hero-sub'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.3)
       .fromTo($('.hero-actions > *'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .7, ease: EASE, stagger: 0.1 }, 0.4)
       .fromTo($('.panel-foot'), { opacity: 0 }, { opacity: 1, duration: .6, ease: EASE }, 0.6)
-      .fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0.2);
+      .fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0.2)
+      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0.4);
   }
 
   if (index === 1) {
     tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
       .fromTo($('.section-tag'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .7, ease: EASE }, 0)
       .fromTo($('.panel-title'), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .9, ease: EASE }, 0.1)
       .fromTo($('.panel-body'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .8, ease: EASE }, 0.25)
@@ -301,6 +307,7 @@ function animatePanelContent(panel, index) {
 
   if (index === 2) {
     tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
       .fromTo($('.section-tag'), { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .6, ease: EASE }, 0)
       .fromTo($('.panel-title'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .8, ease: EASE }, 0.1)
       .fromTo($('.ptabs'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .5, ease: EASE }, 0.3)
@@ -309,6 +316,7 @@ function animatePanelContent(panel, index) {
 
   if (index === 3) {
     tl.fromTo($('.bg-digit'), { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
+      .fromTo($('.bg-shapes'), { opacity: 0 }, { opacity: 1, duration: 2, ease: EASE }, 0)
       .fromTo($('.section-tag'), { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: .6, ease: EASE }, 0)
       .fromTo($('.panel-title'), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .9, ease: EASE }, 0.1)
       .fromTo($('.panel-body'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .7, ease: EASE }, 0.25)
@@ -635,6 +643,11 @@ function heroEntrance() {
     { opacity: 0, scale: 1.08 },
     { opacity: 1, scale: 1, duration: 1.5, ease: EASE },
     0.2
+  )
+  .fromTo(p0.querySelector('.bg-shapes'),
+    { opacity: 0 },
+    { opacity: 1, duration: 2, ease: EASE },
+    0.4
   );
 }
 
