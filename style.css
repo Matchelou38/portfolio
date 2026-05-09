@@ -46,8 +46,8 @@
 
   /* Texte */
   --text:     #f2f0eb;                    /* texte principal */
-  --text2:    #888880;                    /* texte secondaire (descriptions) */
-  --text3:    #444;                       /* texte tertiaire (labels, footer) */
+  --text2:    #6f6f69;                    /* texte secondaire (descriptions) */
+  --text3:    #585858;                       /* texte tertiaire (labels, footer) */
 
   /* Accent — or mat, gaming premium */
   --accent:   #c8a96e;
@@ -77,7 +77,7 @@ body.light {
 
   --text:    #111;
   --text2:   #555;                /* était #888 — meilleur contraste sur blanc */
-  --text3:   #777;                /* était #bbb — quasi-invisible sur fond clair */
+  --text3:   #626262;                /* était #bbb — quasi-invisible sur fond clair */
 
   --accent-d: rgba(180,140,70,.1);
 }
