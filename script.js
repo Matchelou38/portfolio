@@ -30,6 +30,36 @@ gsap.registerPlugin(ScrollTrigger);
 ============================================================ */
 const projectData = [
   {
+    title: "MEUPORG (Godot Engine)",
+    youtube: "N3a8g1s0P7w",
+    details: `<div class="project-details-wrapper">
+      <div class="tech-stack">
+        <span class="stack-item">Godot Engine</span>
+        <span class="stack-item">GDScript</span>
+        <span class="stack-item">Gameplay</span>
+        <span class="stack-item">Map building</span>
+
+      </div>
+      <p>Réalisation d'un <strong>RPG multijoueur</strong> inspiré des <strong>JRPG rétro</strong>, avec combats dynamiques en <strong>QTE</strong>, esquives en temps réel et graphismes <strong>HD-2D</strong> dans un univers <strong>fantasy parodique</strong>.</p>
+      <div class="detail-group">
+        <h5><i class="fas fa-running"></i> Gameplay</h5>
+        <ul>
+          <li>Exploration : déplacement sur la map, saut et caméra mobile.</li>
+          <li>Contrôles : déplacement latéral, saut et slide.</li>
+          <li>Collisions avec obstacles entraînant un Game Over.</li>
+        </ul>
+      </div>
+      <div class="detail-group">
+        <h5><i class="fas fa-cogs"></i> Systèmes</h5>
+        <ul>
+          <li>Génération procédurale de tuiles infinies.</li>
+          <li>Spawn d'obstacles et de pickups aléatoires.</li>
+          <li>Score basé sur distance et objets collectés.</li>
+        </ul>
+      </div>
+    </div>`
+  },
+  {
     title: "Endless Runner (UE5)",
     youtube: "ptaOeyNE72s",
     details: `<div class="project-details-wrapper">
