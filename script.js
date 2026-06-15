@@ -30,31 +30,69 @@ gsap.registerPlugin(ScrollTrigger);
 ============================================================ */
 const projectData = [
   {
+    title: "K3AudioType (Android)",
+    images: [
+      "img/k3mobile.testk3-1.jpg",
+      "img/k3mobile.testk3-2.jpg",
+      "img/k3mobile.testk3-3.jpg",
+      "img/k3mobile.testk3-4.jpg",
+      "img/k3mobile.testk3-5.jpg",
+      "img/k3mobile.testk3-6.jpg",
+      "img/k3mobile.testk3-7.jpg"
+    ],
+    details: `<div class="project-details-wrapper">
+      <div class="tech-stack">
+        <span class="stack-item">Kotlin</span>
+        <span class="stack-item">Jetpack Compose</span>
+        <span class="stack-item">Room</span>
+        <span class="stack-item">Accessibilité</span>
+      </div>
+      <p>Application Android d'<strong>accessibilité</strong> destinée aux personnes <strong>déficientes visuelles</strong>, transformant la saisie au clavier en une expérience guidée par le <strong>son</strong> et le <strong>toucher</strong> : retour vocal, earcons et vibrations haptiques.</p>
+      <div class="detail-group">
+        <h5><i class="fas fa-universal-access"></i> Accessibilité</h5>
+        <ul>
+          <li>Synthèse vocale (<strong>TTS</strong>) lisant le texte saisi en temps réel.</li>
+          <li><strong>Earcons</strong> et retours <strong>haptiques</strong> confirmant chaque action sans regarder l'écran.</li>
+          <li>Découpage du texte par phrases/paragraphes pour une relecture fluide.</li>
+        </ul>
+      </div>
+      <div class="detail-group">
+        <h5><i class="fas fa-cogs"></i> Architecture & Technique</h5>
+        <ul>
+          <li><code>AccessibilityService</code> interceptant la saisie clavier même <strong>écran verrouillé</strong>.</li>
+          <li>Base de données <strong>Room</strong> pour l'historique et les statistiques globales (SQL).</li>
+          <li>Mode « écran allumé » activable et contenus pré-remplis.</li>
+          <li>Documentation <strong>KDoc</strong> générée en HTML via <strong>Dokka</strong>.</li>
+        </ul>
+      </div>
+    </div>`
+  },
+  {
     title: "MEUPORG (Godot Engine)",
     youtube: "N3a8g1s0P7w",
     details: `<div class="project-details-wrapper">
       <div class="tech-stack">
         <span class="stack-item">Godot Engine</span>
         <span class="stack-item">GDScript</span>
-        <span class="stack-item">Gameplay</span>
-        <span class="stack-item">Map building</span>
-
+        <span class="stack-item">Multijoueur</span>
+        <span class="stack-item">Split-screen</span>
       </div>
-      <p>Réalisation d'un <strong>RPG multijoueur</strong> inspiré des <strong>JRPG rétro</strong>, avec combats dynamiques en <strong>QTE</strong>, esquives en temps réel et graphismes <strong>HD-2D</strong> dans un univers <strong>fantasy parodique</strong>.</p>
+      <p>Réalisation d'un <strong>RPG multijoueur en split-screen</strong> inspiré des <strong>JRPG rétro</strong>, avec un système de combat au <strong>tour par tour</strong>, des attaques et esquives en <strong>QTE temps réel</strong> et un rendu <strong>HD-2D</strong> dans un univers <strong>fantasy parodique</strong>. Projet de groupe développé sous <strong>Godot 4</strong>.</p>
       <div class="detail-group">
-        <h5><i class="fas fa-running"></i> Gameplay</h5>
+        <h5><i class="fas fa-gamepad"></i> Gameplay</h5>
         <ul>
-          <li>Exploration : déplacement sur la map, saut et caméra mobile.</li>
-          <li>Contrôles : déplacement latéral, saut et slide.</li>
-          <li>Collisions avec obstacles entraînant un Game Over.</li>
+          <li>Combat au tour par tour avec QTE pour les attaques et l'esquive en temps réel.</li>
+          <li>Exploration en overworld avec caméra orbitale et déplacement relatif à la caméra.</li>
+          <li>Système de fuite du combat et de retour à l'exploration.</li>
         </ul>
       </div>
       <div class="detail-group">
         <h5><i class="fas fa-cogs"></i> Systèmes</h5>
         <ul>
-          <li>Génération procédurale de tuiles infinies.</li>
-          <li>Spawn d'obstacles et de pickups aléatoires.</li>
-          <li>Score basé sur distance et objets collectés.</li>
+          <li>Split-screen : un <code>SubViewport</code> par joueur, <code>World3D</code> redirigé vers la scène de combat partagée.</li>
+          <li>Isolation des entrées par joueur via des actions Input Map indexées par périphérique.</li>
+          <li>Barres de vie ennemies dupliquées et synchronisées sur chaque écran.</li>
+          <li>Ennemis paramétrables depuis l'éditeur (sprite, animation, comportement) via <code>EnemyTrigger</code>.</li>
         </ul>
       </div>
     </div>`
@@ -731,6 +769,20 @@ function initForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
 
+  const ok  = document.getElementById('form-ok');
+
+  // Affiche un message (succès ou erreur) sous le formulaire
+  const showMsg = (text, isError) => {
+    if (!ok) return;
+    ok.textContent = text;
+    ok.style.color = isError ? '#ff6b6b' : '';
+    ok.style.display = 'block';
+    gsap.fromTo(ok, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4 });
+    setTimeout(() => {
+      gsap.to(ok, { opacity: 0, duration: .3, onComplete: () => ok.style.display = 'none' });
+    }, 4000);
+  };
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
@@ -747,19 +799,23 @@ function initForm() {
 
       if (res.ok) {
         form.reset();
-        const ok = document.getElementById('form-ok');
-        if (ok) {
-          ok.style.display = 'block';
-          // Apparition animée
-          gsap.fromTo(ok, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4 });
-          // Disparition après 4 secondes
-          setTimeout(() => {
-            gsap.to(ok, { opacity: 0, duration: .3, onComplete: () => ok.style.display = 'none' });
-          }, 4000);
-        }
+        showMsg('Message envoyé !', false);
+      } else {
+        // Formspree renvoie un JSON avec le détail de l'erreur
+        let detail = `Erreur ${res.status}`;
+        try {
+          const data = await res.json();
+          if (data.errors && data.errors.length) {
+            detail = data.errors.map(er => er.message).join(', ');
+          }
+        } catch (_) { /* réponse non-JSON */ }
+        showMsg("Échec de l'envoi : " + detail, true);
+        console.error('Formspree:', res.status, detail);
       }
-    } catch (_) {
-      // Échec silencieux — l'utilisateur peut réessayer
+    } catch (err) {
+      // Erreur réseau / CORS (typiquement en local file://)
+      showMsg("Erreur réseau — réessaie une fois le site en ligne.", true);
+      console.error('Envoi formulaire échoué :', err);
     }
 
     // Restaurer le bouton dans tous les cas
