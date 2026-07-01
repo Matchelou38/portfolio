@@ -302,6 +302,9 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 /* Panel 1 — À propos */
 #p1 .section-tag, #p1 .panel-title, #p1 .panel-body, #p1 .btn-line, .fact { opacity: 0; }
 
+/* Page Parcours */
+#p1b .section-tag, #p1b .panel-title, .tlh-item { opacity: 0; }
+
 /* Panel 2 — Projets */
 #p2 .section-tag, #p2 .panel-title, .ptabs, .pe { opacity: 0; }
 
@@ -635,6 +638,79 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
   border: 1px solid var(--border2);
   color: var(--text3);
   border-radius: 20px;
+}
+
+
+/* ============================================================
+   9bis. PAGE — PARCOURS
+   Frise chronologique horizontale (gauche → droite) en pleine
+   page, entre "À propos" et "Projets". Pas de bg-digit (page
+   volontairement sobre), même traitement de section-tag /
+   panel-title que les autres.
+============================================================ */
+.parcours-content .panel-title { margin-bottom: 4rem; }
+
+.timeline-h {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.8rem;
+  padding-top: 10px;
+}
+
+/* Ligne continue reliant tous les jalons, de gauche à droite */
+.timeline-h::before {
+  content: '';
+  position: absolute;
+  top: 14.5px;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background: var(--border2);
+}
+
+.tlh-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.tlh-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  margin-bottom: 1.1rem;
+}
+
+/* Jalon le plus récent — mis en avant */
+.tlh-item.tlh-current .tlh-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(200,169,110,.18);
+}
+
+.tlh-date {
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.tlh-title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.tlh-sub {
+  font-size: 0.7rem;
+  color: var(--text2);
+  line-height: 1.55;
 }
 
 
@@ -1310,6 +1386,19 @@ body.hovered #cursor-ring { width: 48px; height: 48px; border-color: var(--accen
 
   /* Tableau de faits : label plus étroit */
   .fact { grid-template-columns: 80px 1fr; }
+
+  /* Frise Parcours : bascule en rangée scrollable sur tablette/mobile */
+  .timeline-h {
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .timeline-h::-webkit-scrollbar { display: none; }
+  .timeline-h::before { left: 4px; right: auto; width: 2000px; }
+  .tlh-item { flex: 0 0 170px; }
 }
 
 /* ── Mobile (≤ 600px) ── */

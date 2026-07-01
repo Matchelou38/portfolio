@@ -243,7 +243,7 @@ const projectData = [
 ];
 
 /* Noms affichés dans le label de la topbar pour chaque panel */
-const SECTION_NAMES = ['Accueil', 'À propos', 'Projets', 'Contact'];
+const SECTION_NAMES = ['Accueil', 'À propos', 'Parcours', 'Projets', 'Contact'];
 
 
 /* ============================================================
@@ -257,7 +257,7 @@ let currentPanel = 0;
    pendant qu'une autre est encore en cours */
 let isAnimating = false;
 
-const TOTAL    = 4;       // nombre de panels
+const TOTAL    = 5;       // nombre de panels
 const DURATION = 0.9;     // durée d'une transition en secondes
 const EASE     = "expo.out";
 
@@ -360,13 +360,19 @@ function resetPanelContent(panel, index) {
   }
 
   if (index === 2) {
+    gsap.set([$('.section-tag'), $('.panel-title')], { opacity: 0, x: 0, y: 0 });
+    gsap.set($('.tlh-item'), { opacity: 0, y: 16 });
+    gsap.set($('.bg-shapes'), { opacity: 0 });
+  }
+
+  if (index === 3) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.ptabs')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.pe'), { opacity: 0, x: 40 });
     gsap.set($('.bg-digit'),  { opacity: 0, scale: 1.08 });
     gsap.set($('.bg-shapes'), { opacity: 0 });
   }
 
-  if (index === 3) {
+  if (index === 4) {
     gsap.set([$('.section-tag'), $('.panel-title'), $('.panel-body'), $('.btn-send')], { opacity: 0, x: 0, y: 0 });
     gsap.set($('.clink'), { opacity: 0, x: -16 });
     gsap.set($('.fw'),    { opacity: 0, y: 20 });
@@ -419,8 +425,18 @@ function animatePanelContent(panel, index) {
       .fromTo($('.fact'),        { opacity: 0, x:  30 }, { opacity: 1, x: 0, duration: .6, ease: EASE, stagger: 0.06 }, 0.15);
   }
 
-  // ── Panel 2 — Projets ──
+  // ── Page — Parcours ──
   if (index === 2) {
+    tl
+      .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)
+      .fromTo($('.section-tag'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .7, ease: EASE }, 0)
+      .fromTo($('.panel-title'), { opacity: 0, y:  30 }, { opacity: 1, y: 0, duration: .9, ease: EASE }, 0.1)
+      // Jalons de la frise : apparition en cascade de gauche à droite
+      .fromTo($('.tlh-item'),    { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .5, ease: EASE, stagger: 0.09 }, 0.3);
+  }
+
+  // ── Panel 3 — Projets ──
+  if (index === 3) {
     tl
       .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
       .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)
@@ -431,8 +447,8 @@ function animatePanelContent(panel, index) {
       .fromTo($('.pe'),          { opacity: 0, x:  40 }, { opacity: 1, x: 0, duration: .55, ease: EASE, stagger: 0.055 }, 0.35);
   }
 
-  // ── Panel 3 — Contact ──
-  if (index === 3) {
+  // ── Panel 4 — Contact ──
+  if (index === 4) {
     tl
       .fromTo($('.bg-digit'),  { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.5, ease: EASE }, 0)
       .fromTo($('.bg-shapes'), { opacity: 0 },              { opacity: 1,           duration: 2,   ease: EASE }, 0)

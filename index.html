@@ -36,8 +36,9 @@
   <nav id="side-nav" aria-label="Navigation">
     <button class="side-dot active" data-goto="0" aria-label="Accueil"></button>
     <button class="side-dot" data-goto="1" aria-label="À propos"></button>
-    <button class="side-dot" data-goto="2" aria-label="Projets"></button>
-    <button class="side-dot" data-goto="3" aria-label="Contact"></button>
+    <button class="side-dot" data-goto="2" aria-label="Parcours"></button>
+    <button class="side-dot" data-goto="3" aria-label="Projets"></button>
+    <button class="side-dot" data-goto="4" aria-label="Contact"></button>
   </nav>
 
   <!-- ═══════════════════════════════════════════════
@@ -379,18 +380,6 @@
         <div class="ag-right">
           <div class="fact-list">
             <div class="fact">
-              <span class="fk">Formation</span>
-              <span class="fv">BUT Informatique — IUT 2 Grenoble</span>
-            </div>
-            <div class="fact">
-              <span class="fk">Échange</span>
-              <span class="fv">UQAC — Chicoutimi <i class="fas fa-map-marker-alt hobby-icon"></i></span>
-            </div>
-            <div class="fact">
-              <span class="fk">Stage</span>
-              <span class="fv">Mesulog — Documentation & LabView</span>
-            </div>
-            <div class="fact">
               <span class="fk">Game Dev</span>
               <span class="fv tags-inline">
                 <span>UE5</span><span>Godot</span><span>Blueprint</span><span>C++</span><span>C</span><span>GDScript</span>
@@ -415,6 +404,111 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- PAGE — PARCOURS (entre À propos et Projets, pas de numéro de catégorie) -->
+    <section class="panel" id="p1b" data-label="Parcours">
+      <div class="bg-shapes" aria-hidden="true">
+        <svg viewBox="0 0 1440 810" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+
+          <!-- Nébuleuse — droite, légèrement haute -->
+          <ellipse cx="1160" cy="240" rx="320" ry="200" style="fill:var(--text)" opacity="0.013"/>
+          <ellipse cx="1180" cy="220" rx="170" ry="110" style="fill:var(--text)" opacity="0.017"/>
+
+          <!-- ══ CASSIOPÉE (forme en W) — haut-gauche ══ -->
+          <line x1="120" y1="180" x2="220" y2="120" style="stroke:var(--border2);stroke-width:0.8" opacity="0.82"/>
+          <line x1="220" y1="120" x2="300" y2="170" style="stroke:var(--border2);stroke-width:0.8" opacity="0.82"/>
+          <line x1="300" y1="170" x2="380" y2="110" style="stroke:var(--border2);stroke-width:0.8" opacity="0.80"/>
+          <line x1="380" y1="110" x2="460" y2="150" style="stroke:var(--border2);stroke-width:0.8" opacity="0.78"/>
+          <circle cx="120" cy="180" r="1.8" style="fill:var(--text)" opacity="0.60"/>
+          <circle cx="220" cy="120" r="2.4" style="fill:var(--text)" opacity="0.78"/>
+          <circle cx="220" cy="120" r="6"   fill="none" style="stroke:var(--accent);stroke-width:0.5" opacity="0.22"/>
+          <circle cx="300" cy="170" r="2"   style="fill:var(--text)" opacity="0.68"/>
+          <circle cx="380" cy="110" r="2.2" style="fill:var(--text)" opacity="0.72"/>
+          <circle cx="460" cy="150" r="1.8" style="fill:var(--text)" opacity="0.58"/>
+
+          <!-- ══ LA CROIX DU SUD — bas-droite ══ -->
+          <line x1="1080" y1="600" x2="1160" y2="700" style="stroke:var(--border2);stroke-width:0.8" opacity="0.78"/>
+          <line x1="1020" y1="660" x2="1220" y2="640" style="stroke:var(--border2);stroke-width:0.7" opacity="0.62"/>
+          <circle cx="1080" cy="600" r="2.2" style="fill:var(--text)" opacity="0.74"/>
+          <circle cx="1160" cy="700" r="2"   style="fill:var(--text)" opacity="0.68"/>
+          <circle cx="1160" cy="700" r="5.5" fill="none" style="stroke:var(--text);stroke-width:0.5" opacity="0.18"/>
+          <circle cx="1020" cy="660" r="1.8" style="fill:var(--text)" opacity="0.60"/>
+          <circle cx="1220" cy="640" r="1.8" style="fill:var(--text)" opacity="0.60"/>
+
+          <!-- Étoiles de fond, dispersées -->
+          <circle cx="80"   cy="360" r="1"   style="fill:var(--text)" opacity="0.34"/>
+          <circle cx="260"  cy="420" r="1.2" style="fill:var(--text)" opacity="0.40"/>
+          <circle cx="560"  cy="80"  r="0.9" style="fill:var(--text)" opacity="0.30"/>
+          <circle cx="720"  cy="300" r="1.1" style="fill:var(--text)" opacity="0.36"/>
+          <circle cx="880"  cy="480" r="0.9" style="fill:var(--text)" opacity="0.30"/>
+          <circle cx="1000" cy="120" r="1.3" style="fill:var(--text)" opacity="0.42"/>
+          <circle cx="1340" cy="380" r="1"   style="fill:var(--text)" opacity="0.34"/>
+          <circle cx="640"  cy="640" r="1.1" style="fill:var(--text)" opacity="0.36"/>
+          <circle cx="420"  cy="700" r="0.9" style="fill:var(--text)" opacity="0.30"/>
+          <circle cx="180"  cy="580" r="1"   style="fill:var(--text)" opacity="0.32"/>
+          <circle cx="1300" cy="200" r="0.9" style="fill:var(--text)" opacity="0.30"/>
+          <circle cx="960"  cy="720" r="1"   style="fill:var(--text)" opacity="0.33"/>
+
+          <!-- HUD corner brackets -->
+          <polyline points="60,160 60,60 160,60"        fill="none" style="stroke:var(--border2);stroke-width:1"/>
+          <polyline points="1380,160 1380,60 1280,60"   fill="none" style="stroke:var(--border2);stroke-width:1"/>
+          <polyline points="60,650 60,750 160,750"      fill="none" style="stroke:var(--border2);stroke-width:1"/>
+          <polyline points="1380,650 1380,750 1280,750" fill="none" style="stroke:var(--border2);stroke-width:1"/>
+
+        </svg>
+      </div>
+
+      <div class="panel-content parcours-content">
+        <p class="section-tag">Parcours</p>
+        <h2 class="panel-title">Mon <em>parcours</em></h2>
+
+        <div class="timeline-h">
+
+          <div class="tlh-item">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">2019 – 2022</span>
+            <span class="tlh-title">Bac STI2D, spécialité SIN</span>
+            <span class="tlh-sub">Ferdinand-Buisson, Voiron · Mention Assez bien</span>
+          </div>
+
+          <div class="tlh-item">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">2022 – 2026</span>
+            <span class="tlh-title">BUT Informatique</span>
+            <span class="tlh-sub">IUT 2, Grenoble</span>
+          </div>
+
+          <div class="tlh-item">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">Juil. 2023</span>
+            <span class="tlh-title">Stage — Assistant informatique</span>
+            <span class="tlh-sub">PAUL Charvet SAS, Charavines</span>
+          </div>
+
+          <div class="tlh-item">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">Juil. 2024 – Juil. 2025</span>
+            <span class="tlh-title">Magasinier</span>
+            <span class="tlh-sub">PAUL Charvet SAS, Charavines</span>
+          </div>
+
+          <div class="tlh-item">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">Mai – Juin 2025</span>
+            <span class="tlh-title">Stage — Mesulog</span>
+            <span class="tlh-sub">Documentation &amp; LabView</span>
+          </div>
+
+          <div class="tlh-item tlh-current">
+            <span class="tlh-dot"></span>
+            <span class="tlh-date">2025 – 2026</span>
+            <span class="tlh-title">Échange international</span>
+            <span class="tlh-sub">UQAC, Chicoutimi · Spécialisation jeu vidéo</span>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -740,7 +834,7 @@
           <p class="section-tag">03 — Contact</p>
           <h2 class="panel-title">Travaillons<br/><em>ensemble</em></h2>
           <p class="panel-body">
-            Projet, stage, ou simplement échanger — n'hésitez pas à me contacter.
+            Projet, stage, ou simplement échanger — N'hésitez pas à me contacter.
           </p>
           <div class="clinks">
             <a href="mailto:mathis.marsande@etu.univ-grenoble-alpes.fr" class="clink">
